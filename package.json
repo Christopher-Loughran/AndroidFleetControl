@@ -1,0 +1,24 @@
+{
+  "name": "androidfleetcontrol",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Christopher-Loughran/AndroidFleetControl.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Christopher-Loughran/AndroidFleetControl/issues"
+  },
+  "homepage": "https://github.com/Christopher-Loughran/AndroidFleetControl#readme",
+  "dependencies": {
+    "adbkit": "^2.11.1",
+    "async": "^3.2.1",
+    "bluebird": "^3.7.2"
+  }
+}

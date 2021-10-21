@@ -5,9 +5,12 @@ from datetime import datetime
 from typing import List
 
 
+#TODO paralelize all functions with mutiple devices
+
 # get list of device names
 def getDevices():
     devices = []
+
 
     exe = subprocess.Popen("adb devices", shell=True, stdout=PIPE)
     output = exe.stdout.read()
@@ -129,6 +132,8 @@ def recordScreens(devices: List[str], seconds: int):
         shellCmd(device, ["rm", "/sdcard/" + filename])
 
 
+
+
 # take a screenshot of the device and retrieve the file
 def screenCap(devices: List[str]):
     now = datetime.now()
@@ -167,7 +172,7 @@ outputs = ""
 devices = getDevices()
 
 # outputs = installPackage(devices, "vlc.apk")
-outputs = uninstallPackage(devices, "org.videolan.vlc")
+# outputs = uninstallPackage(devices, "org.videolan.vlc")
 
 # outputs = pushFiles(devices, "./randomFile", "/sdcard/")
 # outputs = pullFiles(devices, "./sdcard/randomFile")
@@ -178,7 +183,7 @@ outputs = uninstallPackage(devices, "org.videolan.vlc")
 # recordScreens(devices, 10)
 # screenCap(devices)
 
-# inputKey(devices, 3) #home
+inputKey(devices, 3) #home
 # inputKey(devices, 4) #back
 # inputKey(devices, 27) #open camera
 
