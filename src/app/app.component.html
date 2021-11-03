@@ -1,0 +1,7 @@
+<button (click)="getDevices()">Get devices</button>
+
+<ol>
+  <li *ngFor="let device of devices | async">
+    {{device}}
+  </li>
+</ol>
