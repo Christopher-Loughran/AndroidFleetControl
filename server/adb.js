@@ -179,9 +179,13 @@ function groupAdbCmd(devices, cmd){
 /*
 	Installs an app from an .apk file
 	packageName: example.apk (apk file must be on the pc not the device)
+	/!\ Installation does not work and in fact FREEZES the server if apk is not the right version for device /!\
 */
 function installPackage(devices, packageName){
-	console.log("installing " + packageName + " on the following devices: " + devices);
+
+	packageName = echapSpaces(packageName);
+
+	console.log("Installing " + packageName + " on the following devices: " + devices);
 	let cmd = "install " + packageName
     return groupAdbCmd(devices, cmd)
 }
@@ -192,6 +196,9 @@ function installPackage(devices, packageName){
 	packageName: com.example.appname
 */
 function uninstallPackage(devices, packageName){
+
+	packageName = echapSpaces(packageName);
+
 	let cmd = "uninstall " + packageName
     return groupAdbCmd(devices, cmd)
 }
@@ -200,10 +207,20 @@ function uninstallPackage(devices, packageName){
 /*
 	Transfer files from pc to device
 	dest should start with ./sdcard/...
+	We can't use the generic adbCmd() function here because the filename may conatain spaces that can't be \escaped
 */
 function pushFiles(devices, src, dest){
-    let cmd = "push " + src + " " + dest
-    return groupAdbCmd(devices, cmd)
+
+
+	var output = []
+
+	for(var i in devices){
+		let args = ["-s", devices[i], "push", src, dest];
+		const adbProccess = child_process.spawnSync('adb', args);
+		output[devices[i]] = adbProccess.stdout.toString();
+	}
+
+    return output;
 }
 
 
@@ -219,7 +236,8 @@ function pullFiles(devices, src){
 	var output = [];
 
 	for(var i in devices){//for each device: pull the file then rename it to devicename_filename.ext
-		let cmd = "pull " + src + " ."
+		let cmd = "pull " + echapSpaces(src) + " ."
+		console.log(cmd);
 		var cmdOutput = adbCmd(devices[i], cmd);
 		fs.renameSync("./"+fileName, "./"+devices[i]+"_"+fileName);
 
@@ -239,6 +257,9 @@ function pullFiles(devices, src){
 	function works but feedback(output) is useless
 */
 function deleteFile(devices, filepath){
+
+	filepath = echapSpaces(filepath);
+
     let cmds = ["rm", filepath]
     return groupShellCmd(devices, cmds)
 }

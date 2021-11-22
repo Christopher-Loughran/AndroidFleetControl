@@ -82,7 +82,10 @@ router.post('/installpackage', function (req, res) {
     let devices = JSON.parse(req.body.deviceList);
 
 
-    console.log("Installing " + file.name + " on following devices: " +  devices);
+    console.log(file);
+
+
+    //console.log("Installing " + file.name + " on the following devices: " +  devices);
 
     
     if (file.mimetype == 'application/vnd.android.package-archive') { //check if package is an .apk
