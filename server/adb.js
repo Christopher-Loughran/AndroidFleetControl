@@ -1,66 +1,8 @@
-//const http = require('http');
-//const child_process = require("child_process");
-
 import child_process from 'child_process';
+import fs from 'fs';
 
-/*const hostname = '127.0.0.1';
-const port = 3000;	
-
-const server = http.createServer((req, res) => {
-	res.statusCode = 200;
-	res.setHeader('Content-Type', 'text/plain');
-	res.end('Hello World');
-	
-
-});
-
-server.listen(port, hostname, () => {
-	console.log(`Server running at http://${hostname}:${port}/`);
-	testadb();
-
-});
-
-
-
-
-
-
-
-function testadb(){
-
-	let output = ""
-
-	devices = getDevices();
-
-	//output = shellCmd(devices[0], ["ls", "-la"]);
-	//output = groupShellCmd(devices, ["ls", "-la"]);
-
-	//output = adbCmd(devices[0], "install vlc.apk");
-	//output = adbCmd(devices[0], "uninstall org.videolan.vlc");
-
-	//output = groupAdbCmd(devices, "install vlc.apk");
-	//output = groupAdbCmd(devices, "uninstall org.videolan.vlc");
-
-	//output = installPackage(devices, "vlc.apk");
-	//output = uninstallPackage(devices, "org.videolan.vlc");
-
-	//output = pushFiles(devices, "./randomFile", "/sdcard/");
-	//output = pullFiles(devices, "./sdcard/randomFile");
-	//output = deleteFile(devices, "./sdcard/randomFile");
-
-	//output = screenCap(devices);
-	//output = recordScreens(devices, 3);
-
-	//output = inputKey(devices, 3); //home
-	output = shutdown(devices);
-
-	//output = getPackages(devices);
-
-	//output = getBatteryLevel(devices);
-
-	console.log(output);
-}*/
-
+//package name of app that manages wifi connections 
+const wifiManagerPackage = "com.steinwurf.adbjoinwifi"
 
 /*
 	Replace all occurences of searchval with newval in source
@@ -70,6 +12,26 @@ function replaceAll(source, searchval, newval){
 		source = source.replace(searchval, newval)
 	}
 	return source
+}
+
+
+/*
+	Replace <space> with \<space> in source and returns it 
+*/
+function echapSpaces(source){
+
+	var newVal = "";
+
+	for(let i in source){
+		if(source[i] != " "){
+			newVal += source[i];
+		}
+		else{
+			newVal += "\\\ ";
+		}
+	}
+
+	return newVal;
 }
 
 
@@ -98,7 +60,7 @@ function sleep(ms) {
 
 
 /*
-	Blocks execution for x milliseconds 
+	Blocks execution for x milliseconds (syncronously)
 */
 function syncDelay(milliseconds){
 	var start = new Date().getTime();
@@ -141,6 +103,8 @@ function getDevices(){
 	Execute a chain of shell commands on a device.
 	No need to put "adb shell ..." in commands list
 	Each option/parameter must be it's own item in the commands list
+	Advise against doing cmds : String, cmds.split(" ") because some command options can contain spaces
+	Any command options that do contain a space must escaped (replace <space> with \<space> via the echapSpaces() function)
 */
 function shellCmd(device, cmds){
 
@@ -158,16 +122,17 @@ function shellCmd(device, cmds){
 
 
 /*
-	Execute a chain of shell commands on a group of devices in parallel
+	Execute a chain of shell commands on a group of devices
 	No need to put "adb shell ..." in commands list
-	Each option/parameter must be it's own item in the commands list
+	Each option/parameter must be it's own item in a list of commands 
 */
 function groupShellCmd(devices, cmds){
 
-	output = [];
+	var output = [];
 
 	for(var i in devices){
-		output.push(shellCmd(devices[i], cmds))
+		let temp = shellCmd(devices[i], cmds);
+		output[devices[i]] = temp;
 	}
 
 	return output;
@@ -186,7 +151,7 @@ function adbCmd(device, cmd){
 	}
 
 	//target one specific device
-	args = ["-s", device].concat(cmd.split(" "))
+	let args = ["-s", device].concat(cmd.split(" "))
 
 	const adbProccess = child_process.spawnSync('adb', args);
 
@@ -200,11 +165,11 @@ function adbCmd(device, cmd){
 */
 function groupAdbCmd(devices, cmd){
 
-	output = [];
+	var output = [];
 
 	for(var i in devices){
-		temp = adbCmd(devices[i], cmd)
-		output.push(temp);
+		let temp = adbCmd(devices[i], cmd)
+		output[devices[i]] = temp;
 	}
 
 	return output;
@@ -216,7 +181,8 @@ function groupAdbCmd(devices, cmd){
 	packageName: example.apk (apk file must be on the pc not the device)
 */
 function installPackage(devices, packageName){
-	cmd = "install " + packageName
+	console.log("installing " + packageName + " on the following devices: " + devices);
+	let cmd = "install " + packageName
     return groupAdbCmd(devices, cmd)
 }
 
@@ -226,7 +192,7 @@ function installPackage(devices, packageName){
 	packageName: com.example.appname
 */
 function uninstallPackage(devices, packageName){
-	cmd = "uninstall " + packageName
+	let cmd = "uninstall " + packageName
     return groupAdbCmd(devices, cmd)
 }
     
@@ -236,7 +202,7 @@ function uninstallPackage(devices, packageName){
 	dest should start with ./sdcard/...
 */
 function pushFiles(devices, src, dest){
-    cmd = "push " + src + " " + dest
+    let cmd = "push " + src + " " + dest
     return groupAdbCmd(devices, cmd)
 }
 
@@ -246,18 +212,24 @@ function pushFiles(devices, src, dest){
 	src should start with ./sdcard/...
 */
 function pullFiles(devices, src){
-    cmd = "pull " + src + " ."
-    cmdOutput = groupAdbCmd(devices, cmd);
 
-	output = [];
+	let splitSrc = src.split("/");
+	let fileName = splitSrc[splitSrc.length-1];
 
-	for(var i in cmdOutput){
-		temp = cmdOutput[i].split("\n");
+	var output = [];
+
+	for(var i in devices){//for each device: pull the file then rename it to devicename_filename.ext
+		let cmd = "pull " + src + " ."
+		var cmdOutput = adbCmd(devices[i], cmd);
+		fs.renameSync("./"+fileName, "./"+devices[i]+"_"+fileName);
+
+		let temp = cmdOutput.split("\n"); //clean up output
 		temp = temp[temp.length-2];
 		output[devices[i]] = temp;
 	}
 
 	return output
+
 }
 
 
@@ -267,7 +239,7 @@ function pullFiles(devices, src){
 	function works but feedback(output) is useless
 */
 function deleteFile(devices, filepath){
-    cmds = ["rm", filepath]
+    let cmds = ["rm", filepath]
     return groupShellCmd(devices, cmds)
 }
 
@@ -283,7 +255,7 @@ function screenCap(devices){
 
 	for(var i in devices){
 
-		let filename = "screencap_" + devices[i] + "_" + timestamp.toString() + ".png"; //define name of file
+		let filename = "screencap_" + devices[i] + "_" + timestamp.toString() + ".png"; //define name of file as screepcap_deviceName_timestamp.png
 		shellCmd(devices[i], ["screencap", "/sdcard/" + filename]); //perform screenshot
 		syncDelay(3*1000); //wait for image to be saved
 		temp = pullFiles([devices[i]], "/sdcard/" + filename) //pull image file
@@ -297,29 +269,29 @@ function screenCap(devices){
 
 /*
 	Record screen for n seconds and retrieve video file
-	Doesn't work too well for very short videos (less than 5 seconds)
+	Doesn't seem to work too well for very short videos (less than 5 seconds)
 */
-function recordScreens(devices, seconds){ //maybe change this to record just one screen 
+function recordScreen(device, seconds){ //maybe change this to record just one screen 
 
 	let timestamp = Date.now();
 
 	var output = [];
 
-	for(var i in devices){
-		let filename = "recording_" + devices[i] + "_" + timestamp.toString() + ".mp4"; //define name of file
-		shellCmd(devices[i], ["screenrecord", "/sdcard/" + filename, "--time-limit=" + seconds.toString()]); //perform recording
-		syncDelay(seconds*1000); //wait for recording to be finished
-		temp = pullFiles([devices[i]], "/sdcard/" + filename); //pull video file
-		output.push(temp[devices[i]]); //set pull output as output
-		deleteFile([devices[i]], "/sdcard/" + filename); //delete video file on device
-	}
-
+	let filename = "recording_" + device + "_" + timestamp.toString() + ".mp4"; //define name of file as recording_deviceName_timestamp.mp4
+	shellCmd(device, ["screenrecord", "/sdcard/" + filename, "--time-limit=" + seconds.toString()]); //perform recording
+	syncDelay(seconds*1000); //wait for recording to be finished
+	temp = pullFiles([device], "/sdcard/" + filename); //pull video file
+	output.push(temp[device]); //set pull output as output
+	deleteFile([device], "/sdcard/" + filename); //delete video file on device
+	
 	return output;
 }
 
 
 /*
-	Input a keyevent; key is an int
+	Input a keyEvent; key is an int
+	The list of all keyEvent numbers can be found here: 
+	https://developer.android.com/reference/android/view/KeyEvent#constants
 */
 function inputKey(devices, key){
 	return groupShellCmd(devices, ["input", "keyevent", key.toString()])
@@ -328,6 +300,7 @@ function inputKey(devices, key){
 
 /*
 	Turn off the devices
+	Warning: there is no way to turn on devices via adb
 */
 function shutdown(devices){
 	return groupShellCmd(devices, ["reboot", "-p"])
@@ -335,28 +308,28 @@ function shutdown(devices){
 
 
 /*
-	Get a list of all packages installed of each device
+	Get the list of all packages installed of each device
 */
 function getPackages(devices){
 
-	output = [];
+	var output = [];
 
-	for(var i in temp){
-		temp = shellCmd(devices[i], ["cmd", "package", "list", "packages"])
-		packagelist = temp;
-		packagelist = packagelist.split("\n")
-		for(j in packagelist){
-			packagelist[j] = packagelist[j].substring(8);
+	for(var i in devices){
+		var temp = shellCmd(devices[i], ["cmd", "package", "list", "packages"])
+		var packagelist = temp;
+
+		packagelist = packagelist.split("\n")//clean up output
+		for(var j in packagelist){
+			packagelist[j] = packagelist[j].substring(8); 
 		}
 		output[devices[i]] = packagelist;
 	}
-
 	return output;
 }
 
 
 /*
-	Returns a list of 
+	Returns a list of devices with their battery level
 */
 function getBatteryLevel(devices){
 
@@ -364,7 +337,7 @@ function getBatteryLevel(devices){
 
 	for(var i in devices){
 
-		temp = shellCmd(devices[i], ["dumpsys",  "battery"]);
+		var temp = shellCmd(devices[i], ["dumpsys",  "battery"]);
 		temp = temp.split("\n");
 
 		var level;
@@ -382,7 +355,123 @@ function getBatteryLevel(devices){
 
 	return output;
 }
-    
 
-export { getDevices, shellCmd, groupShellCmd, adbCmd, groupAdbCmd, installPackage, 
-	uninstallPackage, pushFiles, pullFiles, deleteFile, screenCap, recordScreens, inputKey, getPackages, getBatteryLevel}
+
+/*
+	Returns true if package is installed on the device
+	packageName: com.example.appname
+*/
+function checkPackageInstalled(device, packageName){
+	var output = shellCmd(device, ["pm", "list", "packages", packageName]);
+	return output.includes(packageName);
+}
+
+
+/*
+	Checks if the WifiSettingsManager is installed and if not, installes it (syncronous)
+*/
+function checkWifiManagerInstalled(device){
+	if(!checkPackageInstalled(device, wifiManagerPackage)){
+		installPackage([device], "wifiManager.apk");
+	}
+}
+
+
+
+/*
+	Checks if the wifi manager app is installed and installs it if not.
+	Adds wifi network with just a password, or no password.
+	There exists support to set static proxy.
+	Wifi manager app: https://github.com/steinwurf/adb-join-wifi (BSD license)
+*/
+function addWifiNetwork(devices, ssid, passwordType, password){
+
+	var ssid = echapSpaces(ssid); //replace <space> with \<space>
+	var password = echapSpaces(password); //replace <space> with \<space>
+
+	var output = [];
+
+	for(var i in devices){
+		checkWifiManagerInstalled(devices[i]); //make sure wifi manager is installed
+		try{
+			if(passwordType != "none"){
+				output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid, "-e", "password_type", passwordType, "-e", "password", password]);
+			}
+			else{
+				output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid]);
+			}
+		}
+		catch(e){
+			output[devices[i]] = e;
+		}
+		
+		
+	}
+
+	return output;
+}
+
+
+
+
+/*
+	toggle is boolean
+*/
+function toggleWifi(devices, toggle){
+
+	var output = [];
+
+
+	for(var i in devices){
+		if(toggle){
+			output[devices[i]] = shellCmd(devices[i], ["svc", "wifi", "enable"]);
+		}
+		else{
+			output[devices[i]] = shellCmd(devices[i], ["svc", "wifi", "disable"]);
+		}
+	}
+	
+	return output;
+}
+
+
+/*
+
+*/
+function forgetWifi(devices){
+
+	var output = [];
+
+	for(var i in devices){
+		output[devices[i]] = shellCmd(devices[i], ["am", "startservice", "-n", "com.google.wifisetup/.WifiSetupService", "-a", "WiFiSetupService.Reset"]);
+	}
+
+	return output;
+
+}
+
+
+
+
+
+export { 
+	getDevices, 
+	shellCmd, 
+	groupShellCmd, 
+	adbCmd, 
+	groupAdbCmd, 
+	installPackage, 
+	checkPackageInstalled, 
+	uninstallPackage, 
+	pushFiles, 
+	pullFiles, 
+	deleteFile, 
+	screenCap, 
+	recordScreen, 
+	inputKey, 
+	getPackages, 
+	getBatteryLevel, 
+	addWifiNetwork,
+	toggleWifi,
+	forgetWifi,
+}

@@ -1,7 +1,101 @@
 <button (click)="getDevices()">Get devices</button>
 
-<ol>
-  <li *ngFor="let device of devices | async">
-    {{device}}
+<ul>
+  <li *ngFor="let device of devices">
+    {{device}} : {{this.batteryLevels[device]}}%
   </li>
-</ol>
+</ul>
+
+
+<br/>
+<input type="text" [(ngModel)]="shellcmd" placeholder="ls"/>
+<br/>
+<button (click)="shellCommand(this.devices, this.shellcmd)">Shell Command</button>
+<br/>
+
+
+<br/>
+<input type="text" [(ngModel)]="adbcmd"/>
+<br/>
+<button (click)="adbCommand(this.devices, this.adbcmd)">ADB Command</button>
+<br/>
+
+
+<br/>
+<form (ngSubmit)="installPackage(this.devices)">
+  <input type="file" (change)="handlePackage($event.target)" accept=".apk">
+  <br/>
+  <input type="submit" value="Install package">
+</form>
+<br/>
+
+
+<br/>
+<input type="text" [(ngModel)]="packageNameCheck" placeholder="com.example.appname"/>
+<br/>
+<button (click)="checkPackageInstalled(this.devices, this.packageNameCheck)">Check Package installed</button>
+<br/>
+
+
+<br/>
+<button (click)="getInstalledPackages(this.devices)">Get Installed Packages</button>
+<br/>
+
+
+<br/>
+<input type="text" [(ngModel)]="packageToUninstall" placeholder="com.example.appname"/>
+<br/>
+<button (click)="uninstallPackage(this.devices, this.packageToUninstall)">Uninstall package</button>
+<br/>
+
+
+<br/>
+<form (ngSubmit)="pushFile(this.devices)">
+  <input type="file" (change)="handleFile($event.target)">
+  <br/>
+  <input type="submit" value="Push file">
+</form>
+<br/>
+
+
+<br/>
+<input type="text" [(ngModel)]="fileToDelete" placeholder="/sdcard/example.file"/>
+<br/>
+<button (click)="deleteFile(this.devices, this.fileToDelete)">Delete file</button>
+<br/>
+
+
+<br/>
+<input type="text" [(ngModel)]="fileToPull" placeholder="/sdcard/example.file"/>
+<br/>
+<button (click)="pullFile(this.devices, this.fileToPull)">Pull file</button>
+<br/>
+
+
+<br/>
+<p>ssid:</p>
+<input type="text" [(ngModel)]="wifissid" placeholder="eduroam"/>
+<p>password:</p>
+<input type="text" [(ngModel)]="wifipassword" placeholder="***********"/>
+<br/>
+<button (click)="addWifi(this.devices, this.wifissid, this.wifipassword)">Add wifi network</button>
+<br/>
+
+
+<br/>
+<button (click)="disableWifi(this.devices)">Disable wifi</button>
+<br/>
+
+
+<br/>
+<button (click)="enableWifi(this.devices)">Enable wifi</button>
+<br/>
+
+
+<br/>
+<button (click)="forgetAllWifi(this.devices)">Forget all wifi connections</button>
+<br/>
+
+
+
+<p>{{this.output}}</p>
