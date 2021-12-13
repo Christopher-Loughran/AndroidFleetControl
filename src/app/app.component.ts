@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -12,11 +13,11 @@ import { saveAs } from 'file-saver';
 })
 export class AppComponent{
   title = 'FleetControl';
-  url = "http://localhost:4201";
+  url = environment.server_url;
+
 
   devices = [];
   batteryLevels = [];
-
   shellcmd : string = "";
   adbcmd: string = "";
   packageFormData = new FormData(); //used to transfer an apk to be installed
@@ -31,6 +32,7 @@ export class AppComponent{
   wifipassword: string = "";
   recordTime: number = 5;
   
+  
   output : string = ""; //testing purposes
 
 
@@ -44,15 +46,16 @@ export class AppComponent{
   /*
     Callback used to display any errors when a request doesn't work
   */
-  displayError(error) {
+  displayError(error: Error) {
     console.error('Request failed with error')
     console.log(error);
   }
 
+
   /*
     Convert {keys: [a, b, c], values: [10, 20, 30]} to [a: 10, b: 20, c: 30]
   */
-  objectToArray(object){
+  objectToArray(object: any){
     var array = [];
 
     if(object.keys.length == object.values.length){
@@ -92,7 +95,7 @@ export class AppComponent{
   /*
     Download a file from a filename + data
   */
-  downloadFile(filename, b64encodedString: string) {
+  downloadFile(filename: string, b64encodedString: string) {
     if (b64encodedString) {
       var blob = this.base64ToBlob(b64encodedString, 'text/plain');
       saveAs(blob, filename);
@@ -116,7 +119,7 @@ export class AppComponent{
   /*
     Get the battery level for selected devices, store them in this.batteryLevels
   */
-  getBatteryLevels(devices){
+  getBatteryLevels(devices: string[]){
     this.http.post<any[]>(this.url+'/batterylevels', {deviceList: devices}).subscribe(
       (response) => {
 
@@ -130,7 +133,7 @@ export class AppComponent{
   /*
     Send an adb shell command to selected devices
   */
-  shellCommand(devices, cmd){
+  shellCommand(devices: string[], cmd: string){
     this.http.post<any>(this.url+'/shellcmd', {deviceList: devices, cmd: cmd}).subscribe(
       (response) => {
         console.log(response);
@@ -143,7 +146,7 @@ export class AppComponent{
   /*
     Send an adb command to selected devices
   */
-  adbCommand(devices, cmd){
+  adbCommand(devices: string[], cmd: string){
     this.http.post<any>(this.url+'/adbcmd', {deviceList: devices, cmd: cmd}).subscribe(
       (response) => {
         console.log(response);
@@ -164,7 +167,7 @@ export class AppComponent{
   /*
     Sends the apk to the server to be installed
   */
-  installPackage(devices){
+  installPackage(devices: string[]){
 
     this.packageFormData.delete('deviceList');
     this.packageFormData.append('deviceList', JSON.stringify(devices)); //formData can't accept array, must be stringified and parsed at other end
@@ -181,7 +184,7 @@ export class AppComponent{
   /*
     Check if a package (com.example.appname) is installed on selected devices
   */
-  checkPackageInstalled(devices, packageName){
+  checkPackageInstalled(devices: string[], packageName: string){
     this.http.post<any>(this.url+'/checkpackageinstalled', {deviceList: devices, packageName: packageName}).subscribe(
       (response) => {
         console.log(response);
@@ -192,9 +195,9 @@ export class AppComponent{
 
   
   /*
-
+    Returns a list of all installed packages on each device
   */
-  getInstalledPackages(devices){
+  getInstalledPackages(devices: string[]){
     this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);
@@ -205,9 +208,10 @@ export class AppComponent{
 
 
   /*
-
+    Uninstalls a package
+    packageName: 'com.example.appname'
   */
-  uninstallPackage(devices, packageName){
+  uninstallPackage(devices: string[], packageName: string){
     this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
       (response) => {
         console.log(response);
@@ -229,7 +233,7 @@ export class AppComponent{
   /*
     Sends the file to the server
   */
-  pushFile(devices){
+  pushFile(devices: string[]){
     this.fileFormData.delete('deviceList');
     this.fileFormData.append('deviceList', JSON.stringify(devices)); //formData can't accept array, must be stringified and parsed at other end
 
@@ -243,9 +247,9 @@ export class AppComponent{
 
 
   /*
-
+    Deletes a file on selected devices
   */
-  deleteFile(devices, filePath){
+  deleteFile(devices: string[], filePath: string){
     this.http.post<any>(this.url+'/deletefile', {deviceList: devices, filePath: filePath}).subscribe(
       (response) => {
         console.log(response);
@@ -260,7 +264,7 @@ export class AppComponent{
     for each file, download file.
     Tested for upto 15Ko so far...
   */
-  pullFile(devices, filePath){
+  pullFile(devices: string[], filePath: string){
     this.http.post<any>(this.url+'/pullfile', {deviceList: devices, filePath: filePath}).subscribe(
       (response) => {
         console.log(response);
@@ -276,11 +280,10 @@ export class AppComponent{
 
 
   /*
-    
+    Add a wifi network
+    passwordType : 'WPA'/'WEP'/'none' (if none password will not be taken into account)
   */
-  addWifi(devices, ssid, password, passwordType){
-
-    //var passwordType = "WPA"; //WPA/WEP/none (if none password will not be taken into account)
+  addWifi(devices: string[], ssid: string, password: string, passwordType: string){
 
     this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password}).subscribe(
       (response) => {
@@ -291,9 +294,9 @@ export class AppComponent{
 
 
   /*
-
+    Turn wifi off
   */
-  disableWifi(devices){
+  disableWifi(devices: string[]){
     this.http.post<any>(this.url+'/disablewifi', {deviceList: devices, toggle: false}).subscribe(
       (response) => {
         this.output = response.values[0];
@@ -303,9 +306,9 @@ export class AppComponent{
 
 
   /*
-
+    Turn wifi on
   */
-  enableWifi(devices){
+  enableWifi(devices: string[]){
     this.http.post<any>(this.url+'/enablewifi', {deviceList: devices, toggle: true}).subscribe(
       (response) => {
         this.output = response.values[0];
@@ -317,7 +320,7 @@ export class AppComponent{
   /*
     Doesn't seem to work
   */
-  forgetAllWifi(devices){
+  forgetAllWifi(devices: string[]){
     this.http.post<any>(this.url+'/forgetallwifi', {deviceList: devices}).subscribe(
       (response) => {
         this.output = response.values[0];
@@ -327,9 +330,9 @@ export class AppComponent{
 
 
   /*
-    Record the screen of selected devices for n seconds then download the file
+    Record the screen of selected devices for n seconds then download the files
   */
-  recordScreen(devices, seconds){
+  recordScreen(devices: string[], seconds: number){
     this.http.post<any>(this.url+'/recordscreen', {deviceList: devices, seconds: seconds}).subscribe(
       (response) => {
         console.log(response);
@@ -345,9 +348,9 @@ export class AppComponent{
 
 
   /*
-
+    Get a screen capture of selected devices and download then download the files
   */
-  screenCapture(devices){
+  screenCapture(devices: string[]){
     this.http.post<any>(this.url+'/screencapture', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);
@@ -365,7 +368,7 @@ export class AppComponent{
   /*
 
   */
-  getWifiConnection(devices){
+  getWifiConnection(devices: string[]){
     this.http.post<any>(this.url+'/getwificonnection', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);

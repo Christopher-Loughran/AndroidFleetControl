@@ -11,7 +11,7 @@ router.use(fileUpload());
 
 /*
     [a: 10, b: 20, c: 30] => {keys: ['a', 'b', 'c'], values: [10, 20, 30]}
-    Useful because express won't send key, value array
+    Useful because express cannot send key, value array
 */
 function arrayToObject(array){
     let keys = [];
@@ -44,6 +44,7 @@ router.post('/batterylevels', (req, res) => {
     let output = adb.getBatteryLevel(devices);
     res.send(arrayToObject(output));
 });
+
 
 /*
     Execute a shell command on selected devices, send back the results for each device
