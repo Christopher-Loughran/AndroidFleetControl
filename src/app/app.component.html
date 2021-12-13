@@ -75,12 +75,26 @@
 <br/>
 <p>ssid:</p>
 <input type="text" [(ngModel)]="wifissid" placeholder="eduroam"/>
+<br/>
+<br/>
+<label>
+  <input type="radio" name="passwordType" [(ngModel)]="wifiPasswordType" value="WPA" [checked]="true">
+  <span>WPA</span>
+</label>
+<label>
+  <input type="radio" name="passwordType" [(ngModel)]="wifiPasswordType" value="WEP">
+  <span>WEP</span>
+</label>
+<label>
+  <input type="radio" name="passwordType" [(ngModel)]="wifiPasswordType" value="">
+  <span>None</span>
+</label>
+<br/>
 <p>password:</p>
 <input type="text" [(ngModel)]="wifipassword" placeholder="***********"/>
 <br/>
-<button (click)="addWifi(this.devices, this.wifissid, this.wifipassword)">Add wifi network</button>
+<button (click)="addWifi(this.devices, this.wifissid, this.wifipassword, this.wifiPasswordType)">Add wifi network</button>
 <br/>
-
 
 <br/>
 <button (click)="disableWifi(this.devices)">Disable wifi</button>

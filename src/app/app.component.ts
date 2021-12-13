@@ -27,6 +27,7 @@ export class AppComponent{
   fileToPull: string = "";
   wifissid: string = "";
   wifiusername: string = "";
+  wifiPasswordType: string = "WPA";
   wifipassword: string = "";
   
   output : string = ""; //testing purposes
@@ -276,9 +277,9 @@ export class AppComponent{
   /*
     
   */
-  addWifi(devices, ssid, password){
+  addWifi(devices, ssid, password, passwordType){
 
-    var passwordType = "WPA"; //WPA/WEP/none (if none password will not be taken into account)
+    //var passwordType = "WPA"; //WPA/WEP/none (if none password will not be taken into account)
 
     this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password}).subscribe(
       (response) => {

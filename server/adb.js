@@ -404,6 +404,7 @@ function checkWifiManagerInstalled(device){
 	Adds wifi network with just a password, or no password.
 	There exists support to set static proxy.
 	Wifi manager app: https://github.com/steinwurf/adb-join-wifi (BSD license)
+	passwordType: WPA or WEP
 */
 function addWifiNetwork(devices, ssid, passwordType, password){
 
