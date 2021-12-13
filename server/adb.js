@@ -268,23 +268,20 @@ function deleteFile(devices, filepath){
 /*
 	Take a screenshot of the device and retrieve the file
 */
-function screenCap(devices){
+function screenCap(device){
 
 	let timestamp = Date.now();
 
 	var output = [];
 
-	for(var i in devices){
+	let filename = "screencap_" + timestamp.toString() + ".png"; //define name of file as screepcap_timestamp.png
+	shellCmd(device, ["screencap", "/sdcard/" + filename]); //perform screenshot
+	syncDelay(3*1000); //wait for image to be saved
+	pullFiles([device], "/sdcard/" + filename) //pull image file
+	deleteFile([device], "/sdcard/" + filename); //delete image file on device
+	
 
-		let filename = "screencap_" + devices[i] + "_" + timestamp.toString() + ".png"; //define name of file as screepcap_deviceName_timestamp.png
-		shellCmd(devices[i], ["screencap", "/sdcard/" + filename]); //perform screenshot
-		syncDelay(3*1000); //wait for image to be saved
-		temp = pullFiles([devices[i]], "/sdcard/" + filename) //pull image file
-		output.push(temp[devices[i]]); //set pull output as output
-		deleteFile([devices[i]], "/sdcard/" + filename); //delete image file on device
-	}
-
-	return output;
+	return device + "_" + filename;
 }
 
 
@@ -296,7 +293,7 @@ function recordScreen(device, seconds){
 
 	let timestamp = Date.now();
 
-	let filename = "recording_" + timestamp.toString() + ".mp4"; //define name of file as recording_deviceName_timestamp.mp4
+	let filename = "recording_" + timestamp.toString() + ".mp4"; //define name of file as recording_timestamp.mp4
 	shellCmd(device, ["screenrecord", "/sdcard/" + filename, "--time-limit=" + seconds.toString()]); //perform recording
 	syncDelay((seconds+1)*1000); //wait for recording to be finished
 	pullFiles([device], "/sdcard/" + filename); //pull video file

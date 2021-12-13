@@ -298,6 +298,30 @@ router.post('/recordscreen', (req, res) =>{
 })
 
 
+/*
+
+*/
+router.post('/screencapture', (req, res) =>{
+    let devices = req.body.deviceList;
+    let filesOutput = []; //array containing [filename : 64bit_data, ...]
+    let filenames = [];
+
+    for(var i in devices){
+        filenames.push(adb.screenCap(devices[i]));
+    }
+
+    for(var i in filenames){
+        
+        let data = fs.readFileSync(filenames[i], {encoding:'base64', flag:'r'});
+
+        filesOutput[filenames[i]] = data
+
+        fs.rm(filenames[i], ()=>{}); //delete file (no callback needed)
+    }
+
+    res.send(arrayToObject(filesOutput));
+})
+
 
 
 

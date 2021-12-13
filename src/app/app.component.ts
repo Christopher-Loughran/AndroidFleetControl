@@ -326,8 +326,29 @@ export class AppComponent{
   }
 
 
+  /*
+    Record the screen of selected devices for n seconds then download the file
+  */
   recordScreen(devices, seconds){
     this.http.post<any>(this.url+'/recordscreen', {deviceList: devices, seconds: seconds}).subscribe(
+      (response) => {
+        console.log(response);
+
+        var files = this.objectToArray(response);
+
+        for(var i in files){
+          this.downloadFile(i, files[i]);
+        }
+      },
+      (error) => { this.displayError(error)});
+  }
+
+
+  /*
+
+  */
+  screenCapture(devices){
+    this.http.post<any>(this.url+'/screencapture', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);
 
