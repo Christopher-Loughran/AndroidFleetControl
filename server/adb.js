@@ -465,8 +465,44 @@ function forgetWifi(devices){
 
 }
 
-
+ 
+/*
+	Perform dump then isolate wifi connection name
+*/
 function checkWifiNetwork(devices){
+	var output = []
+
+	for(var i in devices){
+		let temp = shellCmd(devices[i], ["dumpsys", "connectivity"]).split("\n");
+		let wifiConnections = [];
+
+		for(var line in temp){
+			temp[line] = temp[line].trim();
+
+			if(temp[line].startsWith("NetworkAgentInfo")){
+				temp[line] = temp[line].split(", ");
+
+				for(var element in temp[line]){
+					if(temp[line][element].startsWith("extra")){
+						temp[line][element] = temp[line][element].slice(8);
+						wifiConnections.push(temp[line][element].substring(0, temp[line][element].length - 1));
+						break;
+					}
+				}
+			}
+		}
+
+		//add any connection that is not "none" to output (unless there isn't one, in which case add "none")
+		output[devices[i]] = "none";
+		for(var connection in wifiConnections){
+			if(wifiConnections[connection] != "none"){
+				output[devices[i]] = wifiConnections[connection];
+				break;
+			}
+		}
+	}
+
+	return output;
 
 }
 
@@ -494,4 +530,5 @@ export {
 	addWifiNetwork,
 	toggleWifi,
 	forgetWifi,
+	checkWifiNetwork,
 }

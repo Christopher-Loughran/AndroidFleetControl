@@ -362,5 +362,19 @@ export class AppComponent{
   }
 
 
+  /*
+
+  */
+  getWifiConnection(devices){
+    this.http.post<any>(this.url+'/getwificonnection', {deviceList: devices}).subscribe(
+      (response) => {
+        console.log(response);
+        this.output = response.values[0];
+      },
+      (error) => { this.displayError(error)});
+  }
+
+
+
 
 }

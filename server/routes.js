@@ -323,6 +323,16 @@ router.post('/screencapture', (req, res) =>{
 })
 
 
+/*
+
+*/
+router.post('/getwificonnection', (req, res) =>{
+    let devices = req.body.deviceList;
+    let output = adb.checkWifiNetwork(devices);
+    res.send(arrayToObject(output));
+})
+
+
 
 
 
