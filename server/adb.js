@@ -292,20 +292,17 @@ function screenCap(devices){
 	Record screen for n seconds and retrieve video file
 	Doesn't seem to work too well for very short videos (less than 5 seconds)
 */
-function recordScreen(device, seconds){ //maybe change this to record just one screen 
+function recordScreen(device, seconds){
 
 	let timestamp = Date.now();
 
-	var output = [];
-
-	let filename = "recording_" + device + "_" + timestamp.toString() + ".mp4"; //define name of file as recording_deviceName_timestamp.mp4
+	let filename = "recording_" + timestamp.toString() + ".mp4"; //define name of file as recording_deviceName_timestamp.mp4
 	shellCmd(device, ["screenrecord", "/sdcard/" + filename, "--time-limit=" + seconds.toString()]); //perform recording
-	syncDelay(seconds*1000); //wait for recording to be finished
-	temp = pullFiles([device], "/sdcard/" + filename); //pull video file
-	output.push(temp[device]); //set pull output as output
+	syncDelay((seconds+1)*1000); //wait for recording to be finished
+	pullFiles([device], "/sdcard/" + filename); //pull video file
 	deleteFile([device], "/sdcard/" + filename); //delete video file on device
 	
-	return output;
+	return device + "_" + filename; //new filename
 }
 
 
@@ -398,7 +395,6 @@ function checkWifiManagerInstalled(device){
 }
 
 
-
 /*
 	Checks if the wifi manager app is installed and installs it if not.
 	Adds wifi network with just a password, or no password.
@@ -458,7 +454,7 @@ function toggleWifi(devices, toggle){
 
 
 /*
-
+	Doesn't seem to work
 */
 function forgetWifi(devices){
 
@@ -469,6 +465,11 @@ function forgetWifi(devices){
 	}
 
 	return output;
+
+}
+
+
+function checkWifiNetwork(devices){
 
 }
 

@@ -29,6 +29,7 @@ export class AppComponent{
   wifiusername: string = "";
   wifiPasswordType: string = "WPA";
   wifipassword: string = "";
+  recordTime: number = 5;
   
   output : string = ""; //testing purposes
 
@@ -206,13 +207,13 @@ export class AppComponent{
   /*
 
   */
- uninstallPackage(devices, packageName){
-  this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
-    (response) => {
-      console.log(response);
-      this.output = response.values[0];
-    },
-    (error) => { this.displayError(error)});
+  uninstallPackage(devices, packageName){
+    this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
+      (response) => {
+        console.log(response);
+        this.output = response.values[0];
+      },
+      (error) => { this.displayError(error)});
 }
 
 
@@ -256,7 +257,7 @@ export class AppComponent{
 
   /*
     Get array with shape [filename1 : 64bit_data1, filename2, 64bit_data2, ...]
-    for each file, save file.
+    for each file, download file.
     Tested for upto 15Ko so far...
   */
   pullFile(devices, filePath){
@@ -313,13 +314,28 @@ export class AppComponent{
   }
 
 
-   /*
-
+  /*
+    Doesn't seem to work
   */
   forgetAllWifi(devices){
     this.http.post<any>(this.url+'/forgetallwifi', {deviceList: devices}).subscribe(
       (response) => {
         this.output = response.values[0];
+      },
+      (error) => { this.displayError(error)});
+  }
+
+
+  recordScreen(devices, seconds){
+    this.http.post<any>(this.url+'/recordscreen', {deviceList: devices, seconds: seconds}).subscribe(
+      (response) => {
+        console.log(response);
+
+        var files = this.objectToArray(response);
+
+        for(var i in files){
+          this.downloadFile(i, files[i]);
+        }
       },
       (error) => { this.displayError(error)});
   }

@@ -190,8 +190,9 @@ router.post('/deletefile', (req, res) => {
 
 
 /*
+    Pull all files, then
+
     For each device: 
-        pull the file, 
         rename the file to deviceName_fileName.ext
         convert the file data to 64 bit -> save in array
         delete the file
@@ -200,7 +201,7 @@ router.post('/deletefile', (req, res) => {
 router.post('/pullfile', (req, res) => {
     let devices = req.body.deviceList;
     let filePath = req.body.filePath;
-    let filesOutput = []; //array containing [filename : 64bit_data]
+    let filesOutput = []; //array containing [filename : 64bit_data, ...]
 
     let splitFilePath = filePath.split("/"); //get filename from source
     let fileName = splitFilePath[splitFilePath.length-1]
@@ -268,6 +269,32 @@ router.post('/forgetallwifi', (req, res) =>{
     let devices = req.body.deviceList;
     let output = adb.forgetWifi(devices);
     res.send(arrayToObject(output));
+})
+
+
+/*
+
+*/
+router.post('/recordscreen', (req, res) =>{
+    let devices = req.body.deviceList;
+    let seconds = req.body.seconds
+    let filesOutput = []; //array containing [filename : 64bit_data, ...]
+    let filenames = [];
+
+    for(var i in devices){
+        filenames.push(adb.recordScreen(devices[i], seconds));
+    }
+
+    for(var i in filenames){
+        
+        let data = fs.readFileSync(filenames[i], {encoding:'base64', flag:'r'});
+
+        filesOutput[filenames[i]] = data
+
+        fs.rm(filenames[i], ()=>{}); //delete file (no callback needed)
+    }
+
+    res.send(arrayToObject(filesOutput));
 })
 
 
