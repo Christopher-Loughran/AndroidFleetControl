@@ -333,8 +333,6 @@ router.post('/screencapture', (req, res) => {
 
     for (var i in filenames) {
 
-
-
         let data = fs.readFileSync(filenames[i], { encoding: 'base64', flag: 'r' });
 
         filesOutput[filenames[i]] = data

@@ -9,8 +9,9 @@ import { HttpClient } from '@angular/common/http';
 export class TabletteComponent implements OnInit {
   url = "http://localhost:4201";
 
-  devices = [];
-  batteryLevels = [];
+  devices: string[] = [];
+  batteryLevels: number[] = [];
+  wifiConnections: string[] = [];
 
   constructor(private http: HttpClient) {
     this.refresh()//initialise devices list
@@ -19,7 +20,7 @@ export class TabletteComponent implements OnInit {
   }
 
   /*
-  Select all 
+    Select all 
   */
   toggle(source:any) {
     var checkboxes : NodeListOf<Element> = document.getElementsByName("tablette");
@@ -46,23 +47,37 @@ export class TabletteComponent implements OnInit {
   }
 
 
+  /*
+    Convert {a: 10, b: 20, c: 30} to [a: 10, b: 20, c: 30]
+  */
+  objectToArray(object){
+
+    var array = [];
+
+    for(var i in object){
+      array[i] = object[i];
+    }
+    return array;
+  }  
+
 
   refresh(){
-      this.getDevices();
+    this.getDevices();
+  }
+  
+  
+  /*
+    Gets all connected devices, store them in this.devices
+  */
+    getDevices(){
+      this.http.get<any[]>(this.url+'/devices').subscribe(
+        (response) => {
+          this.devices = response;
+          this.getBatteryLevels(this.devices);
+          this.getWifiConnection(this.devices);
+        },
+        (error) => { this.displayError(error)});
     }
-  
-  
-    /*
-      Gets all connected devices, store them in this.devices
-    */
-      getDevices(){
-        this.http.get<any[]>(this.url+'/devices').subscribe(
-          (response) => {
-            this.devices = response;
-            this.getBatteryLevels(this.devices);
-          },
-          (error) => { this.displayError(error)});
-      }
 
 
     /*
@@ -71,24 +86,22 @@ export class TabletteComponent implements OnInit {
     getBatteryLevels(devices){
       this.http.post<any[]>(this.url+'/batterylevels', {deviceList: devices}).subscribe(
         (response) => {
-  
-          console.log(response)
-          this.batteryLevels = this.objectToArray(response)
+
+          console.log(response);
+          this.batteryLevels = this.objectToArray(response);
         },
         (error) => { this.displayError(error)});
     }
 
-
     /*
-      Convert {a: 10, b: 20, c: 30} to [a: 10, b: 20, c: 30]
-    */
-      objectToArray(object){
 
-        var array = [];
-  
-        for(var i in object){
-          array[i] = object[i];
-        }
-        return array;
-      }
+    */
+    getWifiConnection(devices: string[]){
+      this.http.post<any>(this.url+'/getwificonnection', {deviceList: devices}).subscribe(
+        (response) => {
+          console.log(response);
+          this.wifiConnections = this.objectToArray(response);
+        },
+        (error) => { this.displayError(error)});
+    }
 }
