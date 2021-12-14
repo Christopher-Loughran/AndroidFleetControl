@@ -41,6 +41,10 @@ export class FoctionnalitesComponent implements OnInit {
   getAllPackages(){
     return this.packages
   }
+
+  /**
+   Selectionner tous les packages à désintaller
+   */
   toggle(source:any) {
     var checkboxes : NodeListOf<Element> = document.getElementsByName("package");
     var checkboxeSelectAll = document.getElementById('uninstallall')  as HTMLInputElement;
@@ -55,6 +59,16 @@ export class FoctionnalitesComponent implements OnInit {
 
     }
   }
+  
+  /**
+   * 
+   */
+  nonDisplayAlert(){
+    document.getElementById('alertSuccess').style.display="none";
+    document.getElementById('alertFailed').style.display="none";
+
+  }
+
 
 
   /*
@@ -253,8 +267,15 @@ export class FoctionnalitesComponent implements OnInit {
         (response) => {
           console.log(response);
           this.output = response.values[0];
+          var alert= document.getElementById('alertSuccess');
+          alert.style.display="block";
+      
         },
-        (error) => { this.displayError(error)});
+        (error) => { this.displayError(error)
+          var alert= document.getElementById('alertFailed');
+          alert.style.display="block";
+        
+        });
     }
   
   

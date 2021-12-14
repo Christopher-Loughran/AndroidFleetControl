@@ -26,7 +26,7 @@
       </div>  
       <br>
       <div class="d-grid gap-2 d-md-flex ">
-        <button type="button" class="btn btn-outline-secondary"  style="width: 20%;" data-bs-toggle="modal" data-bs-target="#forgetWifi">Forget all wifi connections</button>
+        <button type="button" class="btn btn-outline-secondary"  style="width: 20%;" data-bs-toggle="modal" data-bs-target="#forgetWifi">Oublier les connexions wifi</button>
         <button  type="button" class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"  data-bs-target="#eteindre"> Eteindre</button>
         <button  type="button" class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#enregistrer"> Record écran
         </button>
@@ -39,7 +39,7 @@
 <!--Les modals des boutons-->
 
 
-<!---Record un vidéo-->
+<!---Record une vidéo-->
 <div class="modal fade" id="enregistrer" tabindex="-1" aria-labelledby="enregistrerLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -67,7 +67,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-          <h5 style="color:black" class="modal-title" id="uninstallLabel">Selectionner les packages à désinstaller  </h5>
+          <h5 style="color:black" class="modal-title" id="uninstallLabel">Selectionnez les packages à désinstaller  </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -101,11 +101,11 @@
     <form (ngSubmit)="installPackage(this.devices)">
       <div class="modal-content">
           <div class="modal-header">
-            <h5 style="color:black" class="modal-title" id="install">Eteindre la tablette</h5>
+            <h5 style="color:black" class="modal-title" id="install">Installer un package</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p style="color:black">Install un package </p>
+            <p style="color:black">Choisissez un package </p>
               <input type="file" (change)="handlePackage($event.target)" accept=".apk">
           </div>
           <div class="modal-footer">
@@ -125,15 +125,21 @@
       <div class="modal-content">
           <div class="modal-header">
             <h5 style="color:black" class="modal-title" id="pushfile">Envoyer un fichier</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)= "nonDisplayAlert()"></button>
           </div>
           <div class="modal-body">
-            <p style="color:black">choisier  un fichier </p>
+            <div class="alert alert-success" role="alert" style="display: none;" id="alertSuccess">
+              Fichier envoyé avec succès !
+            </div>
+            <div class="alert alert-danger" role="alert" style="display: none;" id="alertFailed">
+              Attention votre fichier n'a pas été envoyé !
+            </div>
+            <p style="color:black">Choisissez un fichier </p>
             <input type="file" (change)="handleFile($event.target)">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" >Envoyer</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-primary"  (click)="pushFile(this.devices)" >Envoyer</button>
+            <button type="button" class="btn btn-secondary" (click)= "nonDisplayAlert()" data-bs-dismiss="modal">Annuler</button>
           </div>
       </div>
      </form>
@@ -150,7 +156,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p style="color:black">Entrer le nom de fichier </p>
+            <p style="color:black">Entrez le nom de fichier </p>
             <input type="text" [(ngModel)]="fileToDelete" placeholder="/sdcard/example.file"/>
           </div>
           <div class="modal-footer">
@@ -167,11 +173,11 @@
   <div class="modal-dialog">
       <div class="modal-content">
           <div class="modal-header">
-            <h5 style="color:black" class="modal-title" id="pullfileLabel">--Télecharger un fihcier</h5>
+            <h5 style="color:black" class="modal-title" id="pullfileLabel">Télécharger un fichier</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p style="color:black">Entrer le nom de fichier </p>
+            <p style="color:black">Entrez le nom de fichier </p>
             <input type="text"  [(ngModel)]="fileToPull" placeholder="/sdcard/example.file"/>
           </div>
           <div class="modal-footer">
@@ -192,7 +198,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p style="color:black">Etes vous sûr de vouloir éteindre la tablette ? </p>
+          <p style="color:black">Etes-vous sûr de vouloir éteindre la tablette ? </p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" >Oui</button>
@@ -202,19 +208,19 @@
   </div>
 </div>
 
-<!--Forget all wifi connections-->
+<!--Forget all wifi connexions-->
 <div class="modal fade" id="forgetWifi" tabindex="-1" aria-labelledby="forgetWifiLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-          <h5 style="color:black" class="modal-title" id="forgetWifiLabel">Supprimer tous les connections wifi</h5>
+          <h5 style="color:black" class="modal-title" id="forgetWifiLabel">Supprimer tous les connexions wifi</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p style="color:black">Etes vous sûr de vouloir supprimer tous les connections wifi  ? </p>
+          <p style="color:black">Etes-vous sûr de vouloir supprimer toutes les connexions wifi  ? </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="forgetAllWifi(this.devices)">Oui</button>
+          <button type="button" class="btn btn-primary" onclick="forgetAllWifi(this.devices)">Oui</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
         </div>
     </div>
@@ -247,7 +253,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-          <h5 style="color:black" class="modal-title" id="adbcommandeLabel">commande ADB</h5>
+          <h5 style="color:black" class="modal-title" id="adbcommandeLabel">Commande ADB</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -268,7 +274,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-          <h5 style="color:black" class="modal-title" id="ajouterwifiLabel">Ajouter wifi</h5>
+          <h5 style="color:black" class="modal-title" id="ajouterwifiLabel">Ajouter une connexion wifi</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
