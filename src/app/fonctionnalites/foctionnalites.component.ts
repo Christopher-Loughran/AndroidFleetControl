@@ -29,6 +29,9 @@ export class FoctionnalitesComponent implements OnInit {
   wifipassword: string = "";
   
   output : string = ""; //testing purposes
+  recordTime: number = 5;
+  
+  
 
 
   
@@ -362,6 +365,42 @@ export class FoctionnalitesComponent implements OnInit {
         (error) => { this.displayError(error)});
     }
   
+
+    /*
+    Record the screen of selected devices for n seconds then download the files
+  */
+  recordScreen(devices: string[], seconds: number){
+    this.http.post<any>(this.url+'/recordscreen', {deviceList: devices, seconds: seconds}).subscribe(
+      (response) => {
+        console.log(response);
+
+        var files = this.objectToArray(response);
+
+        for(var i in files){
+          this.downloadFile(i, files[i]);
+        }
+      },
+      (error) => { this.displayError(error)});
+  }
+
+
+  /*
+    Get a screen capture of selected devices and download then download the files
+  */
+  screenCapture(devices: string[]){
+    this.http.post<any>(this.url+'/screencapture', {deviceList: devices}).subscribe(
+      (response) => {
+        console.log(response);
+
+        var files = this.objectToArray(response);
+
+        for(var i in files){
+          this.downloadFile(i, files[i]);
+        }
+      },
+      (error) => { this.displayError(error)});
+  }
+
   
   
   }

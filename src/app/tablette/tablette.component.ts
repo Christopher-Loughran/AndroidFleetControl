@@ -11,6 +11,8 @@ export class TabletteComponent implements OnInit {
 
   devices = [];
   batteryLevels = [];
+  output : string = ""; //testing purposes
+
 
   constructor(private http: HttpClient) {
     this.getDevices();//initialise devices list
@@ -90,6 +92,17 @@ export class TabletteComponent implements OnInit {
     }
 
 
+  /*
+
+  */
+  getWifiConnection(devices: string[]){
+    this.http.post<any>(this.url+'/getwificonnection', {deviceList: devices}).subscribe(
+      (response) => {
+        console.log(response);
+        this.output = response.values[0];
+      },
+      (error) => { this.displayError(error)});
+  }
 
 
 

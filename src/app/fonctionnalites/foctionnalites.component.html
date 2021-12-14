@@ -4,7 +4,6 @@
     <div class="container">
       <h3 class="text-center">Gestion des tablettes</h3>
         
-      <button (click)="getDevices()"><!--<mat-icon>rotate_left</mat-icon>--> refresh</button>
       <br>
       <br/>
       <div class="d-grid gap-2 d-md-flex justify-content-center">
@@ -30,9 +29,9 @@
         <button  type="button" class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"  data-bs-target="#eteindre"> Eteindre</button>
         <button  type="button" class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#enregistrer"> Record écran
         </button>
-        <button  type="button" class="btn btn-outline-secondary" style="width: 20%;"> Capture écran</button>
+        <button  type="button" class="btn btn-outline-secondary" style="width: 20%;" (click)="screenCapture(this.devices)"> Capture écran</button>
       </div>  
-      
+
     </div>  
 </div> 
 
@@ -50,11 +49,10 @@
           <div class="modal-body col text-center" >
             Combien de secondes ?
               <br >
-              <input type="range" min="1" max="60" value="20" oninput="rangeValue.innerText = this.value">
-              <p id="rangeValue">20</p>
-          </div>
+              <input type="number" [(ngModel)]="recordTime" min="5" max="100">
+            </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" >Valider</button>
+            <button type="button" class="btn btn-primary" (click)="recordScreen(this.devices, recordTime)" >Recorder</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
           </div>
     </div>
@@ -238,6 +236,8 @@
         <div class="modal-body">
           <p style="color:black">Entrer une commande :  </p>
           <input type="text" [(ngModel)]="shellcmd" placeholder="ls"/>
+          <p>{{this.output}}</p>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" (click)="shellCommand(this.devices, this.shellcmd)">Exécuter</button>
@@ -259,6 +259,7 @@
         <div class="modal-body">
           <p style="color:black">Entrer une commande :  </p>
           <input type="text" [(ngModel)]="adbcmd" placeholder="ls"/>
+          <p>{{this.output}}</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" (click)="adbCommand(this.devices, this.adbcmd)">Exécuter</button>
