@@ -1,10 +1,18 @@
-<button (click)="getDevices()">Get devices</button>
+<app-header></app-header>
+<app-foctionnalites></app-foctionnalites>
+<app-tablette></app-tablette>
+
+
+<!--
+  <button (click)="getDevices()">Get devices</button>
 
 <ul>
     <li *ngFor="let device of devices">
         {{device}} : {{this.batteryLevels[device]}}%
     </li>
 </ul>
+
+
 
 
 <br/>
@@ -28,8 +36,10 @@
     <input type="submit" value="Install package">
 </form>
 <br/>
+-->
 
 
+<!--
 <br/>
 <input type="text" [(ngModel)]="packageNameCheck" placeholder="com.example.appname" />
 <br/>
@@ -40,8 +50,11 @@
 <br/>
 <button (click)="getInstalledPackages(this.devices)">Get Installed Packages</button>
 <br/>
+-->
 
 
+
+<!---
 <br/>
 <input type="text" [(ngModel)]="packageToUninstall" placeholder="com.example.appname" />
 <br/>
@@ -110,6 +123,9 @@
 <br/>
 <button (click)="forgetAllWifi(this.devices)">Forget all wifi connections</button>
 <br/>
+<p>{{this.output}}</p>
+-->
+<p>{{this.output}}</p>
 
 
 <br/>

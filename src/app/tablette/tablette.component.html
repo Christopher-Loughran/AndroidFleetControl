@@ -1,0 +1,35 @@
+
+<!---Liste des tablettes -->
+
+<div class="d-flex justify-content-center" style="margin-top: 2%;">
+    <div class="container">
+    <div class="d-grid gap-2 d-md-flex justify-content-center">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col"> <input class="form-check-input me-1 " type="checkbox" (click)='toggle(this)' id="selectall"/></th>
+          <th scope="col">Status</th>
+          <th scope="col">Tablette</th>
+          <th scope="col">Niveau de batterie</th>
+          <th scope="col">connexion wifi</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of devices">
+          <td><input class="form-check-input me-1 " name="tablette"  value="" type="checkbox" ></td>
+          <td></td>
+          <th scope="row">{{device}}</th>
+          <td>{{this.batteryLevels[device]}}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  
+  </div>
+  </div>
+  
+  
