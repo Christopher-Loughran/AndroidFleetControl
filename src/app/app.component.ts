@@ -40,7 +40,7 @@ export class AppComponent{
   
 
   constructor(private http: HttpClient) {
-    this.getDevices();//initialise devices list
+    //this.getDevices();//initialise devices list
   }
 
 
@@ -56,7 +56,7 @@ export class AppComponent{
   /*
     Convert {keys: [a, b, c], values: [10, 20, 30]} to [a: 10, b: 20, c: 30]
   */
-  objectToArray(object: any){
+  objectToArray(object){
     var array = [];
 
     if(object.keys.length == object.values.length){
