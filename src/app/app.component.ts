@@ -17,8 +17,8 @@ export class AppComponent{
   url = environment.server_url;
 
 
-  devices = [];
-  batteryLevels = [];
+  devices: string[] = [];
+  batteryLevels: number[] = [];
   shellcmd : string = "";
   adbcmd: string = "";
   packageFormData = new FormData(); //used to transfer an apk to be installed
@@ -47,26 +47,21 @@ export class AppComponent{
   /*
     Callback used to display any errors when a request doesn't work
   */
-  displayError(error: Error) {
+  displayError(error) {
     console.error('Request failed with error')
     console.log(error);
   }
 
 
   /*
-    Convert {keys: [a, b, c], values: [10, 20, 30]} to [a: 10, b: 20, c: 30]
+    Convert {a: 10, b: 20, c: 30} to [a: 10, b: 20, c: 30]
   */
-  objectToArray(object){
+  objectToArray(object: Object){
+
     var array = [];
 
-    if(object.keys.length == object.values.length){
-      for(var i in object.keys){
-        array[object.keys[i]] = object.values[i];
-      }
-    }
-    else{
-      console.error("Mismatched key=>value object:")
-      console.error(object);
+    for(var i in object){
+      array[i] = object[i];
     }
     return array;
   }
@@ -75,7 +70,7 @@ export class AppComponent{
   /*
     Converts a 64bit data string into a blob used to download files
   */
-  base64ToBlob(b64Data, contentType='', sliceSize=512) {
+  base64ToBlob(b64Data: string, contentType='', sliceSize=512) {
     b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
     let byteCharacters = atob(b64Data);
     let byteArrays = [];
@@ -96,7 +91,7 @@ export class AppComponent{
   /*
     Download a file from a filename + data
   */
-  downloadFile(filename: string, b64encodedString: string) {
+  downloadFile(filename, b64encodedString: string) {
     if (b64encodedString) {
       var blob = this.base64ToBlob(b64encodedString, 'text/plain');
       saveAs(blob, filename);
@@ -105,16 +100,24 @@ export class AppComponent{
 
 
   /*
-    gets all connected devices, store them in this.devices
+    Refreshes the device list and gets their battery level
   */
-  getDevices(){
-    this.http.get<any[]>(this.url+'/devices').subscribe(
-      (response) => {
-        this.devices = response;
-        this.getBatteryLevels(this.devices);
-      },
-      (error) => { this.displayError(error)});
+  refresh(){
+    this.getDevices();
   }
+
+
+  /*
+    Gets all connected devices, store them in this.devices
+  */
+    getDevices(){
+      this.http.get<any[]>(this.url+'/devices').subscribe(
+        (response) => {
+          this.devices = response;
+          this.getBatteryLevels(this.devices);
+        },
+        (error) => { this.displayError(error)});
+    }
 
 
   /*
@@ -124,8 +127,8 @@ export class AppComponent{
     this.http.post<any[]>(this.url+'/batterylevels', {deviceList: devices}).subscribe(
       (response) => {
 
-        this.batteryLevels = this.objectToArray(response);
         console.log(response)
+        this.batteryLevels = this.objectToArray(response)
       },
       (error) => { this.displayError(error)});
   }
@@ -134,11 +137,10 @@ export class AppComponent{
   /*
     Send an adb shell command to selected devices
   */
-  shellCommand(devices: string[], cmd: string){
+  shellCommand(devices, cmd){
     this.http.post<any>(this.url+'/shellcmd', {deviceList: devices, cmd: cmd}).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
       },
       (error) => { this.displayError(error)});
   }
@@ -147,11 +149,10 @@ export class AppComponent{
   /*
     Send an adb command to selected devices
   */
-  adbCommand(devices: string[], cmd: string){
+  adbCommand(devices, cmd){
     this.http.post<any>(this.url+'/adbcmd', {deviceList: devices, cmd: cmd}).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
       },
       (error) => { this.displayError(error)});
   }
@@ -168,7 +169,7 @@ export class AppComponent{
   /*
     Sends the apk to the server to be installed
   */
-  installPackage(devices: string[]){
+  installPackage(devices){
 
     this.packageFormData.delete('deviceList');
     this.packageFormData.append('deviceList', JSON.stringify(devices)); //formData can't accept array, must be stringified and parsed at other end
@@ -176,7 +177,6 @@ export class AppComponent{
     return this.http.post<any>(this.url+'/installpackage', this.packageFormData).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
       },
       (error) => { this.displayError(error)});
   }
@@ -185,41 +185,37 @@ export class AppComponent{
   /*
     Check if a package (com.example.appname) is installed on selected devices
   */
-  checkPackageInstalled(devices: string[], packageName: string){
+  checkPackageInstalled(devices, packageName){
     this.http.post<any>(this.url+'/checkpackageinstalled', {deviceList: devices, packageName: packageName}).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
       },
       (error) => { this.displayError(error)});
   }
 
   
   /*
-    Returns a list of all installed packages on each device
+
   */
-  getInstalledPackages(devices: string[]){
+  getInstalledPackages(devices){
     this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
       },
       (error) => { this.displayError(error)});
   }
 
 
   /*
-    Uninstalls a package
-    packageName: 'com.example.appname'
+
   */
-  uninstallPackage(devices: string[], packageName: string){
-    this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
-      (response) => {
-        console.log(response);
-        this.output = response.values[0];
-      },
-      (error) => { this.displayError(error)});
-}
+  uninstallPackage(devices, packageName){
+  this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
+    (response) => {
+      console.log(response);
+    },
+    (error) => { this.displayError(error)});
+  }
 
 
 
@@ -234,27 +230,32 @@ export class AppComponent{
   /*
     Sends the file to the server
   */
-  pushFile(devices: string[]){
+  pushFile(devices){
     this.fileFormData.delete('deviceList');
     this.fileFormData.append('deviceList', JSON.stringify(devices)); //formData can't accept array, must be stringified and parsed at other end
 
     return this.http.post<any>(this.url+'/pushfile', this.fileFormData).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
+        var alert= document.getElementById('alertSuccess');
+        alert.style.display="block";
+    
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error)
+        var alert= document.getElementById('alertFailed');
+        alert.style.display="block";
+      
+      });
   }
 
 
   /*
-    Deletes a file on selected devices
+
   */
-  deleteFile(devices: string[], filePath: string){
+  deleteFile(devices, filePath){
     this.http.post<any>(this.url+'/deletefile', {deviceList: devices, filePath: filePath}).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
       },
       (error) => { this.displayError(error)});
   }
@@ -262,18 +263,21 @@ export class AppComponent{
 
   /*
     Get array with shape [filename1 : 64bit_data1, filename2, 64bit_data2, ...]
-    for each file, download file.
-    Tested for upto 15Ko so far...
+    for each file, save file.
+    Tested for upto 15Mo so far...
   */
-  pullFile(devices: string[], filePath: string){
+  pullFile(devices, filePath){
     this.http.post<any>(this.url+'/pullfile', {deviceList: devices, filePath: filePath}).subscribe(
       (response) => {
         console.log(response);
-
-        var files = this.objectToArray(response);
-
-        for(var i in files){
-          this.downloadFile(i, files[i]);
+  
+        for(var i in response){
+          if(response[i].success == true){
+            this.downloadFile(response[i].filename, response[i].data);
+          }
+          else{
+            console.log(response[i].error);
+          }
         }
       },
       (error) => { this.displayError(error)});
@@ -281,50 +285,51 @@ export class AppComponent{
 
 
   /*
-    Add a wifi network
-    passwordType : 'WPA'/'WEP'/'none' (if none password will not be taken into account)
+    
   */
-  addWifi(devices: string[], ssid: string, password: string, passwordType: string){
+  addWifi(devices, ssid, password, passwordType){
+
+    //var passwordType = "WPA"; //WPA/WEP/none (if none password will not be taken into account)
 
     this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password}).subscribe(
       (response) => {
-        this.output = response.values[0];
+        console.log(response);
       },
       (error) => { this.displayError(error)});
   }
 
 
   /*
-    Turn wifi off
+
   */
-  disableWifi(devices: string[]){
+  disableWifi(devices){
     this.http.post<any>(this.url+'/disablewifi', {deviceList: devices, toggle: false}).subscribe(
       (response) => {
-        this.output = response.values[0];
+        console.log(response);
       },
       (error) => { this.displayError(error)});
   }
 
 
   /*
-    Turn wifi on
+
   */
-  enableWifi(devices: string[]){
+  enableWifi(devices){
     this.http.post<any>(this.url+'/enablewifi', {deviceList: devices, toggle: true}).subscribe(
       (response) => {
-        this.output = response.values[0];
+        console.log(response);
       },
       (error) => { this.displayError(error)});
   }
 
 
   /*
-    Doesn't seem to work
+
   */
-  forgetAllWifi(devices: string[]){
+  forgetAllWifi(devices){
     this.http.post<any>(this.url+'/forgetallwifi', {deviceList: devices}).subscribe(
       (response) => {
-        this.output = response.values[0];
+        console.log(response);
       },
       (error) => { this.displayError(error)});
   }
@@ -352,6 +357,8 @@ export class AppComponent{
     Get a screen capture of selected devices and download then download the files
   */
   screenCapture(devices: string[]){
+    console.log(devices);
+
     this.http.post<any>(this.url+'/screencapture', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);

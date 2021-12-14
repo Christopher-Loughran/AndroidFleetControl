@@ -57,14 +57,14 @@ export class FoctionnalitesComponent implements OnInit {
     }
   }
   
-  /**
-   * 
-   */
-  nonDisplayAlert(){
-    document.getElementById('alertSuccess').style.display="none";
-    document.getElementById('alertFailed').style.display="none";
+    /*
 
-  }
+    */
+    nonDisplayAlert(){
+        document.getElementById('alertSuccess').style.display="none";
+        document.getElementById('alertFailed').style.display="none";
+
+    }
 
 
 
@@ -76,14 +76,14 @@ export class FoctionnalitesComponent implements OnInit {
       console.log(error);
     }
 
-  
+
     /*
       Convert {a: 10, b: 20, c: 30} to [a: 10, b: 20, c: 30]
     */
     objectToArray(object){
 
       var array = [];
-      
+
       for(var i in object){
         array[i] = object[i];
       }
@@ -123,22 +123,25 @@ export class FoctionnalitesComponent implements OnInit {
     }
 
 
+    /*
+      Refreshes the device list and gets their battery level
+    */
     refresh(){
-      this.getDevices()
-      this.getBatteryLevels(this.devices);
+      this.getDevices();
     }
   
   
     /*
-      gets all connected devices, store them in this.devices
+      Gets all connected devices, store them in this.devices
     */
-    getDevices(){
-      this.http.get<any[]>(this.url+'/devices').subscribe(
-        (response) => {
-          this.devices = response;
-        },
-        (error) => { this.displayError(error)});
-    }
+      getDevices(){
+        this.http.get<any[]>(this.url+'/devices').subscribe(
+          (response) => {
+            this.devices = response;
+            this.getBatteryLevels(this.devices);
+          },
+          (error) => { this.displayError(error)});
+      }
   
   
     /*
@@ -354,6 +357,55 @@ export class FoctionnalitesComponent implements OnInit {
         },
         (error) => { this.displayError(error)});
     }
+
+    /*
+    Record the screen of selected devices for n seconds then download the files
+  */
+  recordScreen(devices: string[], seconds: number){
+    this.http.post<any>(this.url+'/recordscreen', {deviceList: devices, seconds: seconds}).subscribe(
+      (response) => {
+        console.log(response);
+
+        var files = this.objectToArray(response);
+
+        for(var i in files){
+          this.downloadFile(i, files[i]);
+        }
+      },
+      (error) => { this.displayError(error)});
+  }
+
+
+  /*
+    Get a screen capture of selected devices and download then download the files
+  */
+  screenCapture(devices: string[]){
+    this.http.post<any>(this.url+'/screencapture', {deviceList: devices}).subscribe(
+      (response) => {
+        console.log(response);
+
+        var files = this.objectToArray(response);
+
+        for(var i in files){
+          this.downloadFile(i, files[i]);
+        }
+      },
+      (error) => { this.displayError(error)});
+  }
+
+
+  /*
+
+  */
+  getWifiConnection(devices: string[]){
+    this.http.post<any>(this.url+'/getwificonnection', {deviceList: devices}).subscribe(
+      (response) => {
+        console.log(response);
+        this.output = response.values[0];
+      },
+      (error) => { this.displayError(error)});
+  }
+
   
   
   

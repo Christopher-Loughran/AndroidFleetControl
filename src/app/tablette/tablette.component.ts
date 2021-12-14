@@ -45,33 +45,50 @@ export class TabletteComponent implements OnInit {
     console.log(error);
   }
 
-  refresh(){
-    this.getDevices()
-    this.getBatteryLevels(this.devices);
-  }
-  
 
-  /*
-    gets all connected devices, store them in this.devices
-  */
-    getDevices(){
-      this.http.get<any[]>(this.url+'/devices').subscribe(
-        (response) => {
-          this.devices = response;
-        },
-        (error) => { this.displayError(error)});
+
+  refresh(){
+      this.getDevices();
     }
+  
+  
+    /*
+      Gets all connected devices, store them in this.devices
+    */
+      getDevices(){
+        this.http.get<any[]>(this.url+'/devices').subscribe(
+          (response) => {
+            this.devices = response;
+            this.getBatteryLevels(this.devices);
+          },
+          (error) => { this.displayError(error)});
+      }
+
 
     /*
-    Get the battery level for selected devices, store them in this.batteryLevels
-  */
+      Get the battery level for selected devices, store them in this.batteryLevels
+    */
     getBatteryLevels(devices){
       this.http.post<any[]>(this.url+'/batterylevels', {deviceList: devices}).subscribe(
         (response) => {
   
-          this.batteryLevels = response;
           console.log(response)
+          this.batteryLevels = this.objectToArray(response)
         },
         (error) => { this.displayError(error)});
     }
+
+
+    /*
+      Convert {a: 10, b: 20, c: 30} to [a: 10, b: 20, c: 30]
+    */
+      objectToArray(object){
+
+        var array = [];
+  
+        for(var i in object){
+          array[i] = object[i];
+        }
+        return array;
+      }
 }

@@ -153,9 +153,9 @@ function adbCmd(device, cmd) {
     //target one specific device
     let args = ["-s", device].concat(cmd.split(" "))
 
-    const adbProccess = child_process.spawnSync('adb', args);
+    const adbProcess = child_process.spawnSync('adb', args);
 
-    return adbProccess.stdout.toString();
+    return adbProcess.stdout.toString();
 }
 
 
@@ -272,13 +272,11 @@ function deleteFile(devices, filepath) {
 
 
 /*
-	Take a screenshot of the device and retrieve the file
+	Take a screenshot of the device and pull the file
 */
 function screenCap(device) {
 
     let timestamp = Date.now();
-
-    var output = {};
 
     let filename = "screencap_" + timestamp.toString() + ".png"; //define name of file as screepcap_timestamp.png
     shellCmd(device, ["screencap", "/sdcard/" + filename]); //perform screenshot
@@ -294,6 +292,8 @@ function screenCap(device) {
 /*
 	Record screen for n seconds and retrieve video file
 	Doesn't seem to work too well for very short videos (less than 5 seconds)
+
+    returns the name of the video file that was pulled from device
 */
 function recordScreen(device, seconds) {
 
