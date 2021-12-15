@@ -27,10 +27,9 @@ export class FoctionnalitesComponent implements OnInit {
   wifiusername: string = "";
   wifiPasswordType: string = "WPA";
   wifipassword: string = "";
-  
-  output : string = ""; //testing purposes
   recordTime: number = 5;
-  
+
+  output : string = ""; //testing purposes
   
   constructor(private http: HttpClient) {
   }

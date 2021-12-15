@@ -148,6 +148,19 @@ router.post('/uninstallpackage', (req, res) => {
 
 
 /*
+
+*/
+router.post('/uninstallmuliplepackages', (req, res) => {
+    let devices = req.body.deviceList;
+    let packageList = req.body.packageList;
+
+    let output = adb.uninstallMuliplePackages(devices, packageList);
+
+    res.send(JSON.stringify(output));
+});
+
+
+/*
     Download file from front-end, push to selected devices (root folder), delete file (on server)
 */
 router.post('/pushfile', function(req, res) {
@@ -194,7 +207,7 @@ router.post('/deletefile', (req, res) => {
             convert the file data to 64 bit -> save in array
             delete the file from the server
         if unsuccessful then
-            send back and error
+            put error in array
     Send the array 
 */
 router.post('/pullfile', (req, res) => {
@@ -224,19 +237,6 @@ router.post('/pullfile', (req, res) => {
 
 
     res.send(JSON.stringify(output));
-
-
-
-
-    /*
-
-    for each device:
-
-        output = {devicename: {success, data/error}, }
-
-        pull file
-    
-    */
 });
 
 
