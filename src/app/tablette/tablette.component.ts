@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-tablette',
@@ -10,7 +11,15 @@ export class TabletteComponent implements OnInit {
   url = "http://localhost:4201";
 
 
+  /*
+  Share data between child and parent directives and components  
+  */
+  @Output() eventChild = new EventEmitter<string[]>();
+
+
   devicesListSelection: string[] = [];
+
+
   output: string = ""; //testing purposes
 
   @Input() devices: string[] = [];
@@ -19,6 +28,7 @@ export class TabletteComponent implements OnInit {
 
   constructor(private http: HttpClient) {
     //this.refresh()//initialise devices list
+    this.sendListDeviceSelection()
   }
   ngOnInit(): void {
   }
@@ -36,19 +46,21 @@ export class TabletteComponent implements OnInit {
 
       if (checkboxeSelectAll.checked) {
         ee.checked = true;
-        if(index==-1){
+        if (index == -1) {
           this.devicesListSelection.push(ee.value);
+          this.sendListDeviceSelection();
+
         }
       }
       else {
         ee.checked = false;
         if (index > -1) {
           this.devicesListSelection.splice(index, 1);
+          this.sendListDeviceSelection();
         }
       }
     }
   }
-
 
 
   /*
@@ -62,17 +74,25 @@ export class TabletteComponent implements OnInit {
       const index = this.devicesListSelection.indexOf(device.value);
 
       if ((device.checked) && (index == -1)) {
-        console.log(device.value);
+        //console.log(device.value);
         this.devicesListSelection.push(device.value);
+        this.sendListDeviceSelection();
       }
       else
         if ((!device.checked) && (index > -1)) {
-          console.log("remove " + device.value);
-
+          //console.log("remove " + device.value);
           this.devicesListSelection.splice(index, 1);
+          this.sendListDeviceSelection();
+
 
         }
     }
   }
 
+ /*
+  Share data between child and parent directives and components  
+  */
+  sendListDeviceSelection() {
+    this.eventChild.emit(this.devicesListSelection);
+  }
 }

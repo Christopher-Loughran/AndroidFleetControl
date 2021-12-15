@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<app-foctionnalites [devices]='devices' [batteryLevels]='batteryLevels'></app-foctionnalites>
+<app-foctionnalites [devices]='devices'  [devicesListSelection]='devicesListSelection' [batteryLevels]='batteryLevels'></app-foctionnalites>
 <div class="d-flex justify-content-center" style="margin-top: 2%;">
   <div class="container">
     <button class="btn btn-outline-primary" (click)="refresh()">
@@ -9,4 +9,4 @@
   </div>
 </div>
 
-<app-tablette [devices]='devices' [wifiConnections]='wifiConnections' [batteryLevels]='batteryLevels'></app-tablette>
+<app-tablette [devices]='devices'  (eventChild)='getDevicesSelection($event)' [wifiConnections]='wifiConnections' [batteryLevels]='batteryLevels'></app-tablette>

@@ -14,6 +14,8 @@ export class FoctionnalitesComponent implements OnInit {
 
   @Input() devices: string[] = [];
   @Input() batteryLevels: number[] = [];
+  @Input() devicesListSelection: string[] = [];
+
 
   shellcmd : string = "";
   adbcmd: string = "";
