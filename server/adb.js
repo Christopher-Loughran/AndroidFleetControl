@@ -131,7 +131,6 @@ function groupShellCmd(devices, cmds) {
 
     for (var i in devices) {
         let temp = shellCmd(devices[i], cmds);
-        console.log(temp);
         output[devices[i]] = temp;
     }
 
@@ -274,14 +273,41 @@ function pullFiles(device, src) {
 /*
 	Deletes files on the device
 	filepath should start with ./sdcard/...
-	function works but feedback(output) is useless
+	function works but feedback (output) is useless
 */
 function deleteFile(devices, filepath) {
 
+    var origPath = filepath;
+
     filepath = echapSpaces(filepath);
 
-    let cmds = ["rm", filepath]
-    return groupShellCmd(devices, cmds)
+    var output = {};
+
+    for (var i in devices) {
+        var existsBefore = false; //file was present before deletion
+        var existsAfter = false; //file is still present after attempted deletion
+
+        var lsOutput = shellCmd(devices[i], ["ls", filepath]).trim(); //check if file exists
+        existsBefore = (lsOutput == origPath);
+
+        shellCmd(devices[i], ["rm", filepath])
+
+        lsOutput = shellCmd(devices[i], ["ls", filepath]).trim(); //check if file has been deleted
+        existsAfter = (lsOutput == origPath);
+
+
+        if (!existsBefore) { //the file never existed
+            output[devices[i]] = origPath + " No such file or directory";
+        } else {
+            if (!existsAfter) { //file did exist and was deleted
+                output[devices[i]] = origPath + " was deleted successfully";
+            } else { //file still exists and was not deleted
+                output[devices[i]] = "Error " + origPath + " was not deleted";
+            }
+        }
+    }
+
+    return output;
 }
 
 
@@ -462,16 +488,26 @@ function toggleWifi(devices, toggle) {
         }
     }
 
-    return output;
+    return checkWifiEnabled(devices);
 }
 
 
 /*
-
+    returns whether or not the wifi is enabled
 */
 function checkWifiEnabled(devices) {
-    //adb shell dumpsys wifi
-    //first line
+
+    var output = {};
+
+    for (var i in devices) {
+        var temp = shellCmd(devices[i], ["dumpsys", "wifi"]);
+        temp = temp.split("\n");
+        temp = temp[0];
+
+        output[devices[i]] = (temp == "Wi-Fi is enabled");
+    }
+
+    return output;
 }
 
 
@@ -558,6 +594,7 @@ export {
     getBatteryLevel,
     addWifiNetwork,
     toggleWifi,
+    checkWifiEnabled,
     forgetWifi,
     checkWifiNetwork,
 }
