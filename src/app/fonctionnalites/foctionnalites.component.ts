@@ -33,9 +33,6 @@ export class FoctionnalitesComponent implements OnInit {
   
   
 
-
-  
-
   constructor(private http: HttpClient) {
     this.getDevices();//initialise devices list
   }
@@ -74,32 +71,28 @@ export class FoctionnalitesComponent implements OnInit {
 
 
 
-  /*
-    Callback used to display any errors when a request doesn't work
-  */
+    /*
+      Callback used to display any errors when a request doesn't work
+    */
     displayError(error) {
       console.error('Request failed with error')
       console.log(error);
     }
+
   
     /*
-      Convert {keys: [a, b, c], values: [10, 20, 30]} to [a: 10, b: 20, c: 30]
+      Convert {a: 10, b: 20, c: 30} to [a: 10, b: 20, c: 30]
     */
     objectToArray(object){
+
       var array = [];
-  
-      if(object.keys.length == object.values.length){
-        for(var i in object.keys){
-          array[object.keys[i]] = object.values[i];
-        }
-      }
-      else{
-        console.error("Mismatched key=>value object:")
-        console.error(object);
+      
+      for(var i in object){
+        array[i] = object[i];
       }
       return array;
     }
-  
+
   
     /*
       Converts a 64bit data string into a blob used to download files
@@ -131,6 +124,12 @@ export class FoctionnalitesComponent implements OnInit {
         saveAs(blob, filename);
       }
     }
+
+
+    refresh(){
+      this.getDevices()
+      this.getBatteryLevels(this.devices);
+    }
   
   
     /*
@@ -140,7 +139,6 @@ export class FoctionnalitesComponent implements OnInit {
       this.http.get<any[]>(this.url+'/devices').subscribe(
         (response) => {
           this.devices = response;
-          this.getBatteryLevels(this.devices);
         },
         (error) => { this.displayError(error)});
     }
@@ -153,8 +151,8 @@ export class FoctionnalitesComponent implements OnInit {
       this.http.post<any[]>(this.url+'/batterylevels', {deviceList: devices}).subscribe(
         (response) => {
   
-          this.batteryLevels = this.objectToArray(response);
           console.log(response)
+          this.batteryLevels = this.objectToArray(response)
         },
         (error) => { this.displayError(error)});
     }
@@ -167,7 +165,6 @@ export class FoctionnalitesComponent implements OnInit {
       this.http.post<any>(this.url+'/shellcmd', {deviceList: devices, cmd: cmd}).subscribe(
         (response) => {
           console.log(response);
-          this.output = response.values[0];
         },
         (error) => { this.displayError(error)});
     }
@@ -180,7 +177,6 @@ export class FoctionnalitesComponent implements OnInit {
       this.http.post<any>(this.url+'/adbcmd', {deviceList: devices, cmd: cmd}).subscribe(
         (response) => {
           console.log(response);
-          this.output = response.values[0];
         },
         (error) => { this.displayError(error)});
     }
@@ -205,7 +201,6 @@ export class FoctionnalitesComponent implements OnInit {
       return this.http.post<any>(this.url+'/installpackage', this.packageFormData).subscribe(
         (response) => {
           console.log(response);
-          this.output = response.values[0];
         },
         (error) => { this.displayError(error)});
     }
@@ -218,7 +213,6 @@ export class FoctionnalitesComponent implements OnInit {
       this.http.post<any>(this.url+'/checkpackageinstalled', {deviceList: devices, packageName: packageName}).subscribe(
         (response) => {
           console.log(response);
-          this.output = response.values[0];
         },
         (error) => { this.displayError(error)});
     }
@@ -231,7 +225,6 @@ export class FoctionnalitesComponent implements OnInit {
       this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
         (response) => {
           console.log(response);
-          this.output = response.values[0];
         },
         (error) => { this.displayError(error)});
     }
@@ -244,7 +237,6 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
       (response) => {
         console.log(response);
-        this.output = response.values[0];
       },
       (error) => { this.displayError(error)});
   }
@@ -269,7 +261,6 @@ export class FoctionnalitesComponent implements OnInit {
       return this.http.post<any>(this.url+'/pushfile', this.fileFormData).subscribe(
         (response) => {
           console.log(response);
-          this.output = response.values[0];
           var alert= document.getElementById('alertSuccess');
           alert.style.display="block";
       
@@ -289,7 +280,6 @@ export class FoctionnalitesComponent implements OnInit {
       this.http.post<any>(this.url+'/deletefile', {deviceList: devices, filePath: filePath}).subscribe(
         (response) => {
           console.log(response);
-          this.output = response.values[0];
         },
         (error) => { this.displayError(error)});
     }
@@ -298,17 +288,20 @@ export class FoctionnalitesComponent implements OnInit {
     /*
       Get array with shape [filename1 : 64bit_data1, filename2, 64bit_data2, ...]
       for each file, save file.
-      Tested for upto 15Ko so far...
+      Tested for upto 15Mo so far...
     */
     pullFile(devices, filePath){
       this.http.post<any>(this.url+'/pullfile', {deviceList: devices, filePath: filePath}).subscribe(
         (response) => {
           console.log(response);
-  
-          var files = this.objectToArray(response);
-  
-          for(var i in files){
-            this.downloadFile(i, files[i]);
+    
+          for(var i in response){
+            if(response[i].success == true){
+              this.downloadFile(response[i].filename, response[i].data);
+            }
+            else{
+              console.log(response[i].error);
+            }
           }
         },
         (error) => { this.displayError(error)});
@@ -324,7 +317,7 @@ export class FoctionnalitesComponent implements OnInit {
   
       this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password}).subscribe(
         (response) => {
-          this.output = response.values[0];
+          console.log(response);
         },
         (error) => { this.displayError(error)});
     }
@@ -336,7 +329,7 @@ export class FoctionnalitesComponent implements OnInit {
     disableWifi(devices){
       this.http.post<any>(this.url+'/disablewifi', {deviceList: devices, toggle: false}).subscribe(
         (response) => {
-          this.output = response.values[0];
+          console.log(response);
         },
         (error) => { this.displayError(error)});
     }
@@ -348,7 +341,7 @@ export class FoctionnalitesComponent implements OnInit {
     enableWifi(devices){
       this.http.post<any>(this.url+'/enablewifi', {deviceList: devices, toggle: true}).subscribe(
         (response) => {
-          this.output = response.values[0];
+          console.log(response);
         },
         (error) => { this.displayError(error)});
     }
@@ -360,7 +353,7 @@ export class FoctionnalitesComponent implements OnInit {
     forgetAllWifi(devices){
       this.http.post<any>(this.url+'/forgetallwifi', {deviceList: devices}).subscribe(
         (response) => {
-          this.output = response.values[0];
+          console.log(response);
         },
         (error) => { this.displayError(error)});
     }

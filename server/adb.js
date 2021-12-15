@@ -127,10 +127,11 @@ function shellCmd(device, cmds) {
 */
 function groupShellCmd(devices, cmds) {
 
-    var output = [];
+    var output = {};
 
     for (var i in devices) {
         let temp = shellCmd(devices[i], cmds);
+        console.log(temp);
         output[devices[i]] = temp;
     }
 
@@ -164,7 +165,7 @@ function adbCmd(device, cmd) {
 */
 function groupAdbCmd(devices, cmd) {
 
-    var output = [];
+    var output = {};
 
     for (var i in devices) {
         let temp = adbCmd(devices[i], cmd)
@@ -211,8 +212,7 @@ function uninstallPackage(devices, packageName) {
 */
 function pushFiles(devices, src, dest) {
 
-
-    var output = []
+    var output = {};
 
     for (var i in devices) {
         let args = ["-s", devices[i], "push", src, dest];
@@ -227,27 +227,33 @@ function pushFiles(devices, src, dest) {
 /*
 	Transfer files from device to pc
 	src should start with ./sdcard/...
+	the file that is pulled is renamed on the server to keep names unique
+	We can't use the generic adbCmd() function here because the filename may conatain spaces that can't be \escaped
+
+	returns true if pull was successful
+	otherwise returns false
 */
-function pullFiles(devices, src) {
+function pullFiles(device, src) {
 
     let splitSrc = src.split("/");
     let fileName = splitSrc[splitSrc.length - 1];
 
-    var output = [];
+    let args = ["-s", device, "pull", src, "."];
+    const adbProccess = child_process.spawnSync('adb', args);
+    let cmdOutput = adbProccess.stdout.toString();
 
-    for (var i in devices) { //for each device: pull the file then rename it to devicename_filename.ext
-        let cmd = "pull " + echapSpaces(src) + " ."
-        console.log(cmd);
-        var cmdOutput = adbCmd(devices[i], cmd);
-        fs.renameSync("./" + fileName, "./" + devices[i] + "_" + fileName);
-
-        let temp = cmdOutput.split("\n"); //clean up output
-        temp = temp[temp.length - 2];
-        output[devices[i]] = temp;
+    if (cmdOutput.startsWith("adb: error")) {
+        return false;
+    } else {
+        try {
+            fs.renameSync("./" + fileName, "./" + device + "_" + fileName);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
-    return output
-
+    return false;
 }
 
 
@@ -272,7 +278,7 @@ function screenCap(device) {
 
     let timestamp = Date.now();
 
-    var output = [];
+    var output = {};
 
     let filename = "screencap_" + timestamp.toString() + ".png"; //define name of file as screepcap_timestamp.png
     shellCmd(device, ["screencap", "/sdcard/" + filename]); //perform screenshot
@@ -327,7 +333,7 @@ function shutdown(devices) {
 */
 function getPackages(devices) {
 
-    var output = [];
+    var output = {};
 
     for (var i in devices) {
         var temp = shellCmd(devices[i], ["cmd", "package", "list", "packages"])
@@ -348,7 +354,7 @@ function getPackages(devices) {
 */
 function getBatteryLevel(devices) {
 
-    var output = [];
+    var output = {};
 
     for (var i in devices) {
 
@@ -404,7 +410,7 @@ function addWifiNetwork(devices, ssid, passwordType, password) {
     var ssid = echapSpaces(ssid); //replace <space> with \<space>
     var password = echapSpaces(password); //replace <space> with \<space>
 
-    var output = [];
+    var output = {};
 
     for (var i in devices) {
         checkWifiManagerInstalled(devices[i]); //make sure wifi manager is installed
@@ -431,7 +437,7 @@ function addWifiNetwork(devices, ssid, passwordType, password) {
 */
 function toggleWifi(devices, toggle) {
 
-    var output = [];
+    var output = {};
 
 
     for (var i in devices) {
@@ -452,7 +458,7 @@ function toggleWifi(devices, toggle) {
 */
 function forgetWifi(devices) {
 
-    var output = [];
+    var output = {};
 
     for (var i in devices) {
         output[devices[i]] = shellCmd(devices[i], ["am", "startservice", "-n", "com.google.wifisetup/.WifiSetupService", "-a", "WiFiSetupService.Reset"]);
@@ -468,7 +474,8 @@ function forgetWifi(devices) {
 	if not connected to any wifi then return "none"
 */
 function checkWifiNetwork(devices) {
-    var output = []
+
+    var output = {};
 
     for (var i in devices) {
         let temp = shellCmd(devices[i], ["dumpsys", "connectivity"]).split("\n");
