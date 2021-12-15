@@ -194,10 +194,12 @@ router.post('/deletefile', (req, res) => {
     let devices = req.body.deviceList;
     let filePath = req.body.filePath;
 
-    let output = adb.deleteFile(devices, filePath); //no feedback
+    let output = adb.deleteFile(devices, filePath);
 
     res.send(JSON.stringify(output));
 });
+
+
 
 
 /*
@@ -232,10 +234,6 @@ router.post('/pullfile', (req, res) => {
         }
     }
 
-    console.log(output);
-    console.log(JSON.stringify(output));
-
-
     res.send(JSON.stringify(output));
 });
 
@@ -254,8 +252,9 @@ router.post('/addwifi', (req, res) => {
         passwordType = "none"
     }
 
-    let output = adb.addWifiNetwork(devices, ssid, passwordType, password);
+    adb.addWifiNetwork(devices, ssid, passwordType, password);
 
+    let output = adb.checkWifiNetwork(devices);
     res.send(JSON.stringify(output));
 });
 
@@ -340,9 +339,6 @@ router.post('/screencapture', (req, res) => {
         fs.rm(filenames[i], () => {}); //delete file (no callback needed)
     }
 
-    console.log(filesOutput)
-
-    console.log(JSON.stringify(filesOutput));
 
     res.send(JSON.stringify(filesOutput));
 })
