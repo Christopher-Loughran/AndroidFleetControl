@@ -113,7 +113,7 @@ router.post('/checkpackageinstalled', (req, res) => {
     let devices = req.body.deviceList;
     let packageName = req.body.packageName;
 
-    let output = [];
+    let output = {};
 
     for (var i in devices) {
         output[devices[i]] = adb.checkPackageInstalled(devices[i], packageName);

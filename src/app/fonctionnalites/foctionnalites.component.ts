@@ -181,11 +181,11 @@ export class FoctionnalitesComponent implements OnInit {
       (error) => { this.displayError(error)});
   }
   
-    
+
   /*
 
   */
-  getInstalledPackages(devices: string){
+  getInstalledPackages(devices: string[]){
     this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);
