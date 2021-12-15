@@ -2,7 +2,6 @@
 
 <div class="d-flex justify-content-center" style="margin-top: 2%;">
     <div class="container">
-
         <div class="d-grid gap-2 d-md-flex justify-content-center">
 
             <table class="table table-striped">
@@ -17,7 +16,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let device of devices">
-                        <td><input class="form-check-input me-1 " name="tablette" value="" type="checkbox"></td>
+                        <td><input class="form-check-input me-1 " name="tablette" value="{{device}}" (click)=' deviceSelection(this)' type="checkbox"></td>
                         <th scope="row">{{device}}</th>
                         <td>{{this.batteryLevels[device]}}</td>
                         <td>

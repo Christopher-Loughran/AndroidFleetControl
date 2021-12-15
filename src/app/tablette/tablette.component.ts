@@ -10,7 +10,8 @@ export class TabletteComponent implements OnInit {
   url = "http://localhost:4201";
 
 
-  output : string = ""; //testing purposes
+  devicesListSelection: string[] = [];
+  output: string = ""; //testing purposes
 
   @Input() devices: string[] = [];
   @Input() batteryLevels: number[] = [];
@@ -25,21 +26,53 @@ export class TabletteComponent implements OnInit {
   /*
     Select all 
   */
-  toggle(source:any) {
-    var checkboxes : NodeListOf<Element> = document.getElementsByName("tablette");
-    var checkboxeSelectAll = document.getElementById('selectall')  as HTMLInputElement;
-        
-    for(var i=0, n=checkboxes.length;i<n;i++) {
-        var ee = checkboxes[i]  as HTMLInputElement;
-        if(checkboxeSelectAll.checked) ee.checked = true;  
-        else{ 
-          ee.checked = false;     
+  toggle(source: any) {
+    var checkboxes: NodeListOf<Element> = document.getElementsByName("tablette");
+    var checkboxeSelectAll = document.getElementById('selectall') as HTMLInputElement;
 
-        }   
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+      var ee = checkboxes[i] as HTMLInputElement;
+      const index = this.devicesListSelection.indexOf(ee.value);
 
+      if (checkboxeSelectAll.checked) {
+        ee.checked = true;
+        if(index==-1){
+          this.devicesListSelection.push(ee.value);
+        }
+      }
+      else {
+        ee.checked = false;
+        if (index > -1) {
+          this.devicesListSelection.splice(index, 1);
+        }
+      }
     }
   }
 
 
+
+  /*
+    device  selection 
+  */
+  deviceSelection(source) {
+    var checkboxes: NodeListOf<Element> = document.getElementsByName("tablette");
+
+    for (var i = 0, n = checkboxes.length; i < n; i++) {
+      var device = checkboxes[i] as HTMLInputElement;
+      const index = this.devicesListSelection.indexOf(device.value);
+
+      if ((device.checked) && (index == -1)) {
+        console.log(device.value);
+        this.devicesListSelection.push(device.value);
+      }
+      else
+        if ((!device.checked) && (index > -1)) {
+          console.log("remove " + device.value);
+
+          this.devicesListSelection.splice(index, 1);
+
+        }
+    }
+  }
 
 }

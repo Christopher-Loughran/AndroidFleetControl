@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { saveAs } from 'file-saver';
 
 import { environment } from 'src/environments/environment';
 
