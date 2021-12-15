@@ -296,7 +296,7 @@ router.post('/forgetallwifi', (req, res) => {
 router.post('/recordscreen', (req, res) => {
     let devices = req.body.deviceList;
     let seconds = req.body.seconds
-    let filesOutput = []; //array containing [filename : 64bit_data, ...]
+    let filesOutput = {}; //object containing {filename : 64bit_data, ...}
     let filenames = [];
 
     for (var i in devices) {
@@ -321,10 +321,13 @@ router.post('/recordscreen', (req, res) => {
 */
 router.post('/screencapture', (req, res) => {
     let devices = req.body.deviceList;
-    let filesOutput = []; //array containing [filename : 64bit_data, ...]
+    let filesOutput = {}; //object containing {filename : 64bit_data, ...}
     let filenames = [];
 
+    console.log(devices);
+
     for (var i in devices) {
+
         filenames.push(adb.screenCap(devices[i]));
     }
 
@@ -336,6 +339,10 @@ router.post('/screencapture', (req, res) => {
 
         fs.rm(filenames[i], () => {}); //delete file (no callback needed)
     }
+
+    console.log(filesOutput)
+
+    console.log(JSON.stringify(filesOutput));
 
     res.send(JSON.stringify(filesOutput));
 })
