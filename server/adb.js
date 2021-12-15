@@ -116,6 +116,10 @@ function shellCmd(device, cmds) {
 
     const adbProccess = child_process.spawnSync('adb', cmds);
 
+    var output = adbProccess.stdout.toString();
+
+    //console.log(output);
+
     return adbProccess.stdout.toString();
 }
 
@@ -170,6 +174,8 @@ function groupAdbCmd(devices, cmd) {
         let temp = adbCmd(devices[i], cmd)
         output[devices[i]] = temp;
     }
+
+    console.log(output);
 
     return output;
 }
@@ -467,6 +473,8 @@ function addWifiNetwork(devices, ssid, passwordType, password) {
 
     }
 
+
+    syncDelay(3 * 1000);
     return output;
 }
 

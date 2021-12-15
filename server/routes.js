@@ -57,8 +57,6 @@ router.post('/shellcmd', (req, res) => {
     let devices = req.body.deviceList; //get devices
     let cmd = req.body.cmd; //get shell command
 
-    console.log(devices);
-
     let output = adb.groupShellCmd(devices, cmd) //execute shell command and get back output
     res.send(JSON.stringify(output)); //send back output
 });

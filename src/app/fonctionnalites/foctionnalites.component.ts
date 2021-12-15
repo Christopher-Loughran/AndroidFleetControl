@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { Observable, of, Subject } from "rxjs";
+
 @Component({
   selector: 'app-foctionnalites',
   templateUrl: './foctionnalites.component.html',
@@ -8,7 +10,7 @@ import { saveAs } from 'file-saver';
 })
 export class FoctionnalitesComponent implements OnInit {
 
-  packages = [{"nom":"package 1"},{"nom":"package 2"},{"nom":"package 3"}]
+  
   title = 'FleetControl';
   url = "http://localhost:4201";
 
@@ -22,6 +24,7 @@ export class FoctionnalitesComponent implements OnInit {
   packageFormData = new FormData(); //used to transfer an apk to be installed
   packageNameCheck: string = "";
   packageToUninstall: string = "";
+  packagesToUninstall: string[] = [];
   fileFormData = new FormData(); //used to push files
   fileToDelete: string = "";
   fileToPull: string = "";
@@ -38,9 +41,7 @@ export class FoctionnalitesComponent implements OnInit {
   
   ngOnInit(): void {
   }
-  getAllPackages(){
-    return this.packages
-  }
+
 
   /**
    Selectionner tous les packages à désintaller
@@ -68,6 +69,7 @@ export class FoctionnalitesComponent implements OnInit {
       document.getElementById('alertFailed').style.display="none";
 
   }
+
 
   /*
     Callback used to display any errors when a request doesn't work
@@ -194,6 +196,35 @@ export class FoctionnalitesComponent implements OnInit {
       (error) => { this.displayError(error)});
   }
 
+
+  
+  /*
+    Returns a list of all the packages installed on all selected devices
+  */
+  getAllPackages(devices: string[]){
+
+    this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
+      (response) => {
+        console.log(response);
+
+        this.packagesToUninstall = []
+
+        for (var i in response){
+          for (var j in response[i]){
+            if(!this.packagesToUninstall.includes(response[i][j])){
+              this.packagesToUninstall.push(response[i][j]);
+              this.packagesToUninstall = [...this.packagesToUninstall];
+            }
+          }
+        }
+
+        return this.packagesToUninstall;
+
+      },
+      (error) => { this.displayError(error)});
+
+      
+  }
 
   /*
 

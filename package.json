@@ -6,9 +6,8 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "test": "concurrently \"npm --prefix server run test\" \"ng serve \"",
-        "prod": "concurrently \"npm --prefix server run prod\" \"ng serve --host 0.0.0.0 \"",
-
+        "test": "concurrently \"npm --prefix server run test\" \"ng serve\"",
+        "prod": "concurrently \"npm --prefix server run prod\" \"ng serve --host 0.0.0.0\"",
         "serve": "concurrently \"ng serve --host 0.0.0.0 --disable-host-check\" \"nodemon server/server.js\""
     },
     "private": true,
