@@ -113,7 +113,7 @@ router.post('/checkpackageinstalled', (req, res) => {
     let devices = req.body.deviceList;
     let packageName = req.body.packageName;
 
-    let output = [];
+    let output = {};
 
     for (var i in devices) {
         output[devices[i]] = adb.checkPackageInstalled(devices[i], packageName);
@@ -142,6 +142,19 @@ router.post('/uninstallpackage', (req, res) => {
     let packageName = req.body.packageName;
 
     let output = adb.uninstallPackage(devices, packageName);
+
+    res.send(JSON.stringify(output));
+});
+
+
+/*
+
+*/
+router.post('/uninstallmuliplepackages', (req, res) => {
+    let devices = req.body.deviceList;
+    let packageList = req.body.packageList;
+
+    let output = adb.uninstallMuliplePackages(devices, packageList);
 
     res.send(JSON.stringify(output));
 });
@@ -194,7 +207,7 @@ router.post('/deletefile', (req, res) => {
             convert the file data to 64 bit -> save in array
             delete the file from the server
         if unsuccessful then
-            send back and error
+            put error in array
     Send the array 
 */
 router.post('/pullfile', (req, res) => {
@@ -224,19 +237,6 @@ router.post('/pullfile', (req, res) => {
 
 
     res.send(JSON.stringify(output));
-
-
-
-
-    /*
-
-    for each device:
-
-        output = {devicename: {success, data/error}, }
-
-        pull file
-    
-    */
 });
 
 

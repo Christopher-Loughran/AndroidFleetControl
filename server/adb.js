@@ -206,6 +206,20 @@ function uninstallPackage(devices, packageName) {
 
 
 /*
+    Uninstall multiple packages from a list of devices
+*/
+function uninstallMuliplePackages(devices, packages) {
+
+    output = {}
+
+    for (var i in packages) {
+        output[packages[i]] = uninstallPackage(devices, packages[i]);
+    }
+    return output;
+}
+
+
+/*
 	Transfer files from pc to device
 	dest should start with ./sdcard/...
 	We can't use the generic adbCmd() function here because the filename may conatain spaces that can't be \escaped
@@ -453,6 +467,15 @@ function toggleWifi(devices, toggle) {
 
 
 /*
+
+*/
+function checkWifiEnabled(devices) {
+    //adb shell dumpsys wifi
+    //first line
+}
+
+
+/*
 	Removes a wifi network
 	Doesn't seem to work
 */
@@ -524,6 +547,7 @@ export {
     installPackage,
     checkPackageInstalled,
     uninstallPackage,
+    uninstallMuliplePackages,
     pushFiles,
     pullFiles,
     deleteFile,

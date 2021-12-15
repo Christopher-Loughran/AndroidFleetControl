@@ -27,10 +27,9 @@ export class FoctionnalitesComponent implements OnInit {
   wifiusername: string = "";
   wifiPasswordType: string = "WPA";
   wifipassword: string = "";
-  
-  output : string = ""; //testing purposes
   recordTime: number = 5;
-  
+
+  output : string = ""; //testing purposes
   
   constructor(private http: HttpClient) {
   }
@@ -181,11 +180,11 @@ export class FoctionnalitesComponent implements OnInit {
       (error) => { this.displayError(error)});
   }
   
-    
+
   /*
 
   */
-  getInstalledPackages(devices: string){
+  getInstalledPackages(devices: string[]){
     this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
       (response) => {
         console.log(response);
