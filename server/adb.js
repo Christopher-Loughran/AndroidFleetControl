@@ -215,7 +215,10 @@ function uninstallPackage(devices, packageName) {
 */
 function uninstallMuliplePackages(devices, packages) {
 
-    output = {}
+    var output = {};
+
+    console.log(devices);
+    console.log(packages);
 
     for (var i in packages) {
         output[packages[i]] = uninstallPackage(devices, packages[i]);

@@ -21,20 +21,25 @@ export class FoctionnalitesComponent implements OnInit {
 
   shellcmd : string = "";
   adbcmd: string = "";
+
   packageFormData = new FormData(); //used to transfer an apk to be installed
-  packageNameCheck: string = "";
-  packageToUninstall: string = "";
+
+  packageSearch: string = ""; //search term for uninstalling packages
+  allPackages: string[] = []; //list of all packages that appear on at least one selected device
+  packagesToDisplay: string[] = []; //list of packages to display in the uninstall modal
   packagesToUninstall: string[] = [];
+
+
   fileFormData = new FormData(); //used to push files
   fileToDelete: string = "";
   fileToPull: string = "";
+
   wifissid: string = "";
   wifiusername: string = "";
   wifiPasswordType: string = "WPA";
   wifipassword: string = "";
-  recordTime: number = 5;
 
-  output : string = ""; //testing purposes
+  recordTime: number = 5;
   
   constructor(private http: HttpClient) {
   }
@@ -186,7 +191,7 @@ export class FoctionnalitesComponent implements OnInit {
   
 
   /*
-
+    Get all packages that are installed on each device
   */
   getInstalledPackages(devices: string[]){
     this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
@@ -199,7 +204,7 @@ export class FoctionnalitesComponent implements OnInit {
 
   
   /*
-    Returns a list of all the packages installed on all selected devices
+    Updates allPackages: a list of all the packages installed on at least one selected device
   */
   getAllPackages(devices: string[]){
 
@@ -207,27 +212,61 @@ export class FoctionnalitesComponent implements OnInit {
       (response) => {
         console.log(response);
 
-        this.packagesToUninstall = []
+        this.allPackages = [];
+        this.packagesToDisplay = [];
+        
+        for (var device in response){
+          for (var packageName in response[device]){
 
-        for (var i in response){
-          for (var j in response[i]){
-            if(!this.packagesToUninstall.includes(response[i][j])){
-              this.packagesToUninstall.push(response[i][j]);
-              this.packagesToUninstall = [...this.packagesToUninstall];
+            if(!this.allPackages.includes(response[device][packageName])){
+
+              this.allPackages.push(response[device][packageName]);
+              this.allPackages = [...this.allPackages];
+              this.updatePackagesToDisplay(this.allPackages, this.packageSearch)
             }
           }
         }
-
-        return this.packagesToUninstall;
-
       },
       (error) => { this.displayError(error)});
-
-      
   }
 
-  /*
 
+  /*
+    Update packagesToDisplay: the list that is displayed in the uninstall modal
+  */
+  updatePackagesToDisplay(allPackages: string[], searchTerm: string){
+
+    this.packagesToDisplay = [];
+
+    for(var i in allPackages){
+      if(allPackages[i].includes(searchTerm)){
+        this.packagesToDisplay.push(allPackages[i]);
+        this.packagesToDisplay = [...this.packagesToDisplay];
+      }
+    }
+  }
+
+
+  /*
+    Adds or removes a package to be uninstalled
+  */
+  togglePackageToBeUninstalled(packageName: string, event){
+
+    var toggle = event.target.checked
+
+    if(toggle){
+      this.packagesToUninstall.push(packageName);
+    }
+    else{
+      this.packagesToUninstall.splice(this.packagesToUninstall.indexOf(packageName), 1);
+    }
+  }
+
+
+
+
+  /*
+    Uninstall one package on all selected devices
   */
   uninstallPackage(devices: string[], packageName: string){
     this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
@@ -235,6 +274,20 @@ export class FoctionnalitesComponent implements OnInit {
         console.log(response);
       },
       (error) => { this.displayError(error)});
+  }
+
+
+  /*
+    Uninstall multiple packages on all selected devices
+  */
+  uninstallMultiplePackages(devices: string[], packageList: string[]){
+    this.http.post<any>(this.url+'/uninstallmuliplepackages', {deviceList: devices, packageList: packageList}).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => { this.displayError(error)});
+
+    this.packagesToUninstall = [];
   }
   
   
