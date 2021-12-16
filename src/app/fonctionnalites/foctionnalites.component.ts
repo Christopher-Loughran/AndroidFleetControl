@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output,EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { Observable, of, Subject } from "rxjs";
@@ -18,7 +18,10 @@ export class FoctionnalitesComponent implements OnInit {
   @Input() batteryLevels: number[] = [];
   @Input() devicesListSelection: string[] = [];
 
+  @Output() refresh = new EventEmitter<string>();
 
+
+  output: string[]=[];
   shellcmd : string = "";
   adbcmd: string = "";
 
@@ -67,15 +70,73 @@ export class FoctionnalitesComponent implements OnInit {
   }
   
   /*
-
+    PushFile (Button annuler)
   */
-  nonDisplayAlert(){
-      document.getElementById('alertSuccess').style.display="none";
-      document.getElementById('alertFailed').style.display="none";
+  nonDisplayAlertPushFile(){
+      document.getElementById('alertSuccesspush').style.display="none";
+      document.getElementById('alertFailedpush').style.display="none";
+      var inputfile = document.getElementById("filePush") as HTMLInputElement; 
+      inputfile.value="";
+  }
+
+  /*
+    Alert PullFile (Button annuler)
+  */
+    nonDisplayAlertPullFile(){
+      document.getElementById('alertSuccesspull').style.display="none";
+      document.getElementById('alertFailedpull').style.display="none";
+      var inputfile = document.getElementById("filePull") as HTMLInputElement; 
+      inputfile.value="";
+  }
+  
+ /*
+    Alert DeleteFile (Button annuler)
+  */
+    nonDisplayAlertDeleteFile(){
+      document.getElementById('alertSuccessdelete').style.display="none";
+      document.getElementById('alertFaileddelete').style.display="none";
+      var inputfile = document.getElementById("filedelete") as HTMLInputElement; 
+      inputfile.value="";
+  }
+
+   /*
+    Alert Install package (Button annuler)
+  */
+    nonDisplayAlertInstall(){
+      document.getElementById('alertSuccessinstall').style.display="none";
+      document.getElementById('alertFailedinstall').style.display="none";
+      var inputfile = document.getElementById("install") as HTMLInputElement; 
+      inputfile.value="";
+  }
+
+  /*
+    Alert Uninstall package (Button annuler)
+  */
+    nonDisplayAlertUnInstall(){
+      document.getElementById('alertSuccessuninstall').style.display="none";
+      document.getElementById('alertFaileduninstall').style.display="none";
+      var inputfile = document.getElementById("uninstall") as HTMLInputElement; 
+      inputfile.value="";
+  }
+
+
+  /*
+    Alert add wifi (Button annuler)
+  */
+    nonDisplayAlertAjoutwifi(){
+      document.getElementById('alertSuccessajoutwifi').style.display="none";
+      document.getElementById('alertFailedajoutwifi').style.display="none";
+      var ssid = document.getElementById("ssid") as HTMLInputElement; 
+      ssid.value="";
+      var mdp = document.getElementById("mdp") as HTMLInputElement; 
+      mdp.value="";
 
   }
 
 
+
+  
+  
   /*
     Callback used to display any errors when a request doesn't work
   */
@@ -137,6 +198,8 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/shellcmd', {deviceList: devices, cmd: cmd}).subscribe(
       (response) => {
         console.log(response);
+        this.output=JSON.stringify(response).split(',');
+
       },
       (error) => { this.displayError(error)});
   }
@@ -149,6 +212,7 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/adbcmd', {deviceList: devices, cmd: cmd}).subscribe(
       (response) => {
         console.log(response);
+
       },
       (error) => { this.displayError(error)});
   }
@@ -173,8 +237,16 @@ export class FoctionnalitesComponent implements OnInit {
     return this.http.post<any>(this.url+'/installpackage', this.packageFormData).subscribe(
       (response) => {
         console.log(response);
+        document.getElementById('alertSuccessinstall').style.display="block";
+        document.getElementById('alertFailedinstall').style.display="none";
+        var inputfile = document.getElementById("install") as HTMLInputElement; 
+        inputfile.value="";
       },
-      (error) => { this.displayError(error)});
+      (error) => { 
+        this.displayError(error);
+        document.getElementById('alertSuccessinstall').style.display="none";
+        document.getElementById('alertFailedinstall').style.display="block";
+      });
   }
 
 
@@ -284,8 +356,17 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/uninstallmuliplepackages', {deviceList: devices, packageList: packageList}).subscribe(
       (response) => {
         console.log(response);
+        document.getElementById('alertSuccessuninstall').style.display="block";
+        document.getElementById('alertFaileduninstall').style.display="none";
+        var inputfile = document.getElementById("uninstall") as HTMLInputElement; 
+        inputfile.value="";
+
       },
-      (error) => { this.displayError(error)});
+      (error) => { 
+        this.displayError(error);
+        document.getElementById('alertSuccessuninstall').style.display="none";
+        document.getElementById('alertFaileduninstall').style.display="block";
+      });
 
     this.packagesToUninstall = [];
   }
@@ -309,14 +390,14 @@ export class FoctionnalitesComponent implements OnInit {
     return this.http.post<any>(this.url+'/pushfile', this.fileFormData).subscribe(
       (response) => {
         console.log(response);
-        var alert= document.getElementById('alertSuccess');
-        alert.style.display="block";
-    
+        document.getElementById('alertSuccesspush').style.display="block";
+        document.getElementById('alertFailedpush').style.display="none";
+        var inputfile = document.getElementById("filePush") as HTMLInputElement; 
+        inputfile.value="";
       },
       (error) => { this.displayError(error)
-        var alert= document.getElementById('alertFailed');
-        alert.style.display="block";
-      
+        document.getElementById('alertSuccesspush').style.display="none";
+        document.getElementById('alertFailedpush').style.display="block";      
       });
   }
   
@@ -328,8 +409,15 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/deletefile', {deviceList: devices, filePath: filePath}).subscribe(
       (response) => {
         console.log(response);
+        document.getElementById('alertSuccessdelete').style.display="block";
+        document.getElementById('alertFaileddelete').style.display="none";
+        var inputfile = document.getElementById("fileDelete") as HTMLInputElement; 
       },
-      (error) => { this.displayError(error)});
+      (error) => { 
+        this.displayError(error);
+        document.getElementById('alertSuccessdelete').style.display="none";
+        document.getElementById('alertFaileddelete').style.display="block";
+      });
   }
   
   
@@ -342,7 +430,10 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/pullfile', {deviceList: devices, filePath: filePath}).subscribe(
       (response) => {
         console.log(response);
-  
+        document.getElementById('alertSuccesspull').style.display="block";
+        document.getElementById('alertFailedpull').style.display="none";
+        var inputfile = document.getElementById("filePull") as HTMLInputElement; 
+        inputfile.value="";
         for(var i in response){
           if(response[i].success == true){
             this.downloadFile(response[i].filename, response[i].data);
@@ -352,7 +443,11 @@ export class FoctionnalitesComponent implements OnInit {
           }
         }
       },
-      (error) => { this.displayError(error)});
+      (error) => { 
+        this.displayError(error);
+        document.getElementById('alertSuccesspull').style.display="none";
+        document.getElementById('alertFailedpull').style.display="block";
+      });
   }
   
   
@@ -366,8 +461,20 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password}).subscribe(
       (response) => {
         console.log(response);
+        document.getElementById('alertSuccessajoutwifi').style.display="block";
+        document.getElementById('alertFailedajoutwifi').style.display="none";
+        var ssid = document.getElementById("ssid") as HTMLInputElement; 
+        var mdp = document.getElementById("mdp") as HTMLInputElement; 
+        ssid.value="";
+        mdp.value="";
+
+        this.refresh.emit("");
       },
-      (error) => { this.displayError(error)});
+      (error) => { 
+        this.displayError(error);
+        document.getElementById('alertSuccessajoutwifi').style.display="none";
+        document.getElementById('alertFailedajoutwifi').style.display="block";
+      });
   }
 
 
@@ -442,12 +549,5 @@ recordScreen(devices: string[], seconds: number){
       (error) => { this.displayError(error)});
   }
 
-
-
-  
-
-
-  
-  
   }
   

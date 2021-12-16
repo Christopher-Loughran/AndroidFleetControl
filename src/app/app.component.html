@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<app-foctionnalites [devices]='devices'  [devicesListSelection]='devicesListSelection' [batteryLevels]='batteryLevels'></app-foctionnalites>
+<app-foctionnalites [devices]='devices' (refresh)='refresh()' [devicesListSelection]='devicesListSelection' [batteryLevels]='batteryLevels'></app-foctionnalites>
 <div class="d-flex justify-content-center" style="margin-top: 2%;">
   <div class="container">
     <button class="btn btn-outline-primary" (click)="refresh()">
