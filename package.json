@@ -6,10 +6,10 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
+        "init": "npm i && npm --prefix server i",
         "test": "concurrently \"npm --prefix server run test\" \"ng serve\"",
         "prod": "concurrently \"npm --prefix server run prod\" \"ng serve --host 0.0.0.0 --disable-host-check --port 4200\"",
-        "init": "npm i && npm --prefix server i",
-        "serve": "concurrently \"ng serve --host 0.0.0.0 --disable-host-check\" \"nodemon server/server.js\""
+        "serve": "echo 'ATTENTION \"npm run serve\" will be removed in the next version please use \"npm run test\"' && concurrently \"ng serve --host 0.0.0.0 --disable-host-check\" \"nodemon server/server.js\""
     },
     "private": true,
     "dependencies": {
