@@ -8,7 +8,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col"> <input class="form-check-input me-1 " type="checkbox" (click)='toggle(this)' id="selectall" checked/></th>
+                        <th scope="col"> <input class="form-check-input me-1 " type="checkbox" (click)='toggle(this)' id="selectall" /></th>
                         <th scope="col">Identificateur</th>
                         <th scope="col">Niveau de batterie</th>
                         <th scope="col">Connexion wifi</th>
@@ -17,7 +17,7 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let device of devices">
-                        <td><input class="form-check-input me-1 " name="tablette" value="{{device}}" (click)='deviceSelection(this)' type="checkbox" checked></td>
+                        <td><input class="form-check-input me-1 " name="tablette" value="{{device}}" (click)='deviceSelection(this)' type="checkbox"></td>
                         <th scope="row">{{device}}</th>
                         <td>{{this.batteryLevels[device]}} %</td>
                         <td>

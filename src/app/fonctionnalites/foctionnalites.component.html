@@ -61,7 +61,7 @@
 
         <!-- Uninstall packages -->
         <div class="modal fade" id="uninstall" tabindex="-1" aria-labelledby="uninstallLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg" style="width: 200%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 style="color:black" class="modal-title" id="uninstallLabel">Selectionnez les packages à désinstaller</h5>
@@ -69,11 +69,8 @@
                     </div>
                     <div class="modal-body">
                         <table class="table table-striped">
-                            <thead>
-                                <input type="text" [(ngModel)]="packageSearch" placeholder="com.example.appname" (keyup)="updatePackagesToDisplay(this.allPackages, this.packageSearch)" />
-                                <tr>
-                                    <th scope="col">Nom du package</th>
-                                </tr>
+                            <thead style="text-align: center;">
+                                <input type="text" [(ngModel)]="packageSearch" placeholder="com.example.appname" (keyup)="updatePackagesToDisplay(this.allPackages, this.packageSearch)" style="margin: 3%;" />
                             </thead>
                             <tbody>
                                 <div *ngIf="this.packagesToDisplay.length != 0 ; then someItems else noItems "></div>
