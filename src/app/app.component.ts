@@ -67,6 +67,7 @@ export class AppComponent {
     this.http.get<any[]>(this.url + '/devices').subscribe(
       (response) => {
         this.devices = response;
+
         this.getBatteryLevels(this.devices);
         this.getWifiConnection(this.devices);
       },
@@ -85,6 +86,8 @@ export class AppComponent {
       },
       (error) => { this.displayError(error) });
   }
+
+
   /*
 
   */
