@@ -50,7 +50,7 @@ export class FoctionnalitesComponent implements OnInit {
 
   /**
    Selectionner tous les packages à désintaller
-   */
+   
   toggle(source:any) {
     var checkboxes : NodeListOf<Element> = document.getElementsByName("package");
     var checkboxeSelectAll = document.getElementById('uninstallall')  as HTMLInputElement;
@@ -64,7 +64,7 @@ export class FoctionnalitesComponent implements OnInit {
         }   
 
     }
-  }
+  }*/
   
   /*
 
@@ -261,8 +261,6 @@ export class FoctionnalitesComponent implements OnInit {
       this.packagesToUninstall.splice(this.packagesToUninstall.indexOf(packageName), 1);
     }
   }
-
-
 
 
   /*

@@ -107,6 +107,12 @@ function getDevices() {
 */
 function shellCmd(device, cmds) {
 
+
+    if (!getDevices().includes(device)) {
+        return (device + " is not connected")
+    }
+
+
     //try to format commands properly / remove excess commands
     cmds = removeAll(cmds, "adb");
     cmds = removeAll(cmds, "shell");
@@ -147,6 +153,10 @@ function groupShellCmd(devices, cmds) {
 	No need to put "adb" in command
 */
 function adbCmd(device, cmd) {
+
+    if (!getDevices().includes(device)) {
+        return (device + " is not connected")
+    }
 
     //remove excess
     if (cmd.startsWith("adb")) {
