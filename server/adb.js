@@ -1,5 +1,6 @@
 import child_process from 'child_process';
 import fs from 'fs';
+import * as systemPackages from './systemPackages.js'
 
 //package name of app that manages wifi connections 
 const wifiManagerPackage = "com.steinwurf.adbjoinwifi"
@@ -388,9 +389,10 @@ function shutdown(devices) {
 
 
 /*
-	Get the list of all packages installed of each device
+	Get the list of all packages installed of each device (except system packages)
 */
 function getPackages(devices) {
+
 
     var output = {};
 
@@ -398,12 +400,26 @@ function getPackages(devices) {
         var temp = shellCmd(devices[i], ["cmd", "package", "list", "packages"])
         var packagelist = temp;
 
-        packagelist = packagelist.split("\n") //clean up output
+        //clean up output, get list of all packages installed on system
+        packagelist = packagelist.split("\n")
         for (var j in packagelist) {
             packagelist[j] = packagelist[j].substring(8);
         }
-        output[devices[i]] = packagelist;
+
+        var nonSystemPackages = []; //only return packages that aren't in 
+
+        for (var j in packagelist) {
+            if (!systemPackages.systemPackages.includes(packagelist[j])) {
+                console.log(packagelist[j] + " wasn't in system packages");
+                nonSystemPackages.push(packagelist[j]);
+            }
+        }
+
+        console.log(nonSystemPackages);
+
+        output[devices[i]] = nonSystemPackages;
     }
+
     return output;
 }
 

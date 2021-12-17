@@ -32,7 +32,6 @@ export class FoctionnalitesComponent implements OnInit {
   packagesToDisplay: string[] = []; //list of packages to display in the uninstall modal
   packagesToUninstall: string[] = [];
 
-
   fileFormData = new FormData(); //used to push files
   fileToDelete: string = "";
   fileToPull: string = "";
@@ -49,25 +48,6 @@ export class FoctionnalitesComponent implements OnInit {
   
   ngOnInit(): void {
   }
-
-
-  /**
-   Selectionner tous les packages à désintaller
-   
-  toggle(source:any) {
-    var checkboxes : NodeListOf<Element> = document.getElementsByName("package");
-    var checkboxeSelectAll = document.getElementById('uninstallall')  as HTMLInputElement;
-        
-    for(var i=0, n=checkboxes.length;i<n;i++) {
-        var ee = checkboxes[i]  as HTMLInputElement;
-        if(checkboxeSelectAll.checked) ee.checked = true;  
-        else{ 
-          ee.checked = false;     
-
-        }   
-
-    }
-  }*/
   
   /*
     PushFile (Button annuler)
@@ -133,9 +113,6 @@ export class FoctionnalitesComponent implements OnInit {
 
   }
 
-
-
-  
   
   /*
     Callback used to display any errors when a request doesn't work
@@ -290,8 +267,9 @@ export class FoctionnalitesComponent implements OnInit {
         for (var device in response){
           for (var packageName in response[device]){
 
-            if(!this.allPackages.includes(response[device][packageName]) && response[device][packageName] != ""){
+            //console.log(response[device][packageName]);
 
+            if(!this.allPackages.includes(response[device][packageName])){
               this.allPackages.push(response[device][packageName]);
               this.allPackages = [...this.allPackages];
               this.updatePackagesToDisplay(this.allPackages, this.packageSearch)
@@ -547,5 +525,5 @@ recordScreen(devices: string[], seconds: number){
       (error) => { this.displayError(error)});
   }
 
-  }
+}
   
