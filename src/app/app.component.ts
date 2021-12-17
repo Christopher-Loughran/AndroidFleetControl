@@ -21,8 +21,7 @@ export class AppComponent {
   devices: string[] = [];
   batteryLevels: number[] = [];
   wifiConnections: string[] = [];
-
-
+  deviceNames: string[] = [];
 
 
   constructor(private http: HttpClient) {
@@ -67,12 +66,14 @@ export class AppComponent {
     this.http.get<any[]>(this.url + '/devices').subscribe(
       (response) => {
         this.devices = response;
-
+        this.getDeviceNames(this.devices);
         this.getBatteryLevels(this.devices);
         this.getWifiConnection(this.devices);
+        
       },
       (error) => { this.displayError(error) });
   }
+
 
   /*
     Get the battery level for selected devices, store them in this.batteryLevels
@@ -89,13 +90,26 @@ export class AppComponent {
 
 
   /*
-
+    Gets the name of the wi-fi network for each device
   */
   getWifiConnection(devices: string[]) {
     this.http.post<any>(this.url + '/getwificonnection', { deviceList: devices }).subscribe(
       (response) => {
         console.log(response);
         this.wifiConnections = this.objectToArray(response);
+      },
+      (error) => { this.displayError(error) });
+  }
+
+
+  /*
+    Get the name of each device
+  */
+  getDeviceNames(devices: string[]){
+    this.http.post<any[]>(this.url + '/devicenames', { deviceList: devices }).subscribe(
+      (response) => {
+        console.log(response)
+        this.deviceNames = this.objectToArray(response)
       },
       (error) => { this.displayError(error) });
   }
@@ -109,6 +123,10 @@ export class AppComponent {
 
   }
 
+
+  /*
+    
+  */
   getdd(){
     console.log(this.devicesListSelection.length);
     console.log(this.devicesListSelection[0]);

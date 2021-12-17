@@ -16,22 +16,19 @@ export class TabletteComponent implements OnInit {
   */
   @Output() eventChild = new EventEmitter<string[]>();
 
-
   devicesListSelection: string[] = [];
-
-
-  output: string = ""; //testing purposes
 
   @Input() devices: string[] = [];
   @Input() batteryLevels: number[] = [];
   @Input() wifiConnections: string[] = [];
+  @Input() deviceNames: string[] = [];
 
   constructor(private http: HttpClient) {
-    //this.refresh()//initialise devices list
     this.sendListDeviceSelection()
   }
   ngOnInit(): void {
   }
+
 
   /*
     Select all 
@@ -74,13 +71,11 @@ export class TabletteComponent implements OnInit {
       const index = this.devicesListSelection.indexOf(device.value);
 
       if ((device.checked) && (index == -1)) {
-        //console.log(device.value);
         this.devicesListSelection.push(device.value);
         this.sendListDeviceSelection();
       }
       else
         if ((!device.checked) && (index > -1)) {
-          //console.log("remove " + device.value);
           this.devicesListSelection.splice(index, 1);
           this.sendListDeviceSelection();
 
@@ -89,7 +84,8 @@ export class TabletteComponent implements OnInit {
     }
   }
 
- /*
+
+  /*
   Share data between child and parent directives and components  
   */
   sendListDeviceSelection() {

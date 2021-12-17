@@ -17,6 +17,7 @@ export class FoctionnalitesComponent implements OnInit {
   @Input() devices: string[] = [];
   @Input() batteryLevels: number[] = [];
   @Input() devicesListSelection: string[] = [];
+  @Input() deviceNames: string[] = [];
 
   @Output() refresh = new EventEmitter<string>();
 

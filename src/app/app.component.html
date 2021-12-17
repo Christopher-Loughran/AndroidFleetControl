@@ -1,12 +1,12 @@
 <app-header></app-header>
 
-<app-foctionnalites [devices]='devices' (refresh)='refresh()' [devicesListSelection]='devicesListSelection' [batteryLevels]='batteryLevels'></app-foctionnalites>
+<app-foctionnalites [devices]='devices' (refresh)='refresh()' [devicesListSelection]='devicesListSelection' [batteryLevels]='batteryLevels' [deviceNames]='deviceNames'></app-foctionnalites>
 <div class="d-flex justify-content-center" style="margin-top: 2%;">
-  <div class="container">
-    <button class="btn btn-outline-primary" (click)="refresh()">
+    <div class="container">
+        <button class="btn btn-outline-primary" (click)="refresh()">
       <!--<mat-icon>rotate_left</mat-icon>--> Refresh
     </button>
-  </div>
+    </div>
 </div>
 
-<app-tablette [devices]='devices'  (eventChild)='getDevicesSelection($event)' [wifiConnections]='wifiConnections' [batteryLevels]='batteryLevels'></app-tablette>
+<app-tablette [devices]='devices' (eventChild)='getDevicesSelection($event)' [wifiConnections]='wifiConnections' [batteryLevels]='batteryLevels' [deviceNames]='deviceNames'></app-tablette>

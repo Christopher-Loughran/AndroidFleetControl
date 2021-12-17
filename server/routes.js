@@ -10,28 +10,6 @@ router.use(fileUpload());
 
 
 /*
-    [a: 10, b: 20, c: 30] => {keys: ['a', 'b', 'c'], values: [10, 20, 30]}
-    Useful because express cannot send key, value array
-*/
-function arrayToObject(array) {
-    /*let keys = [];
-    let values = [];
-
-    for(var i in array){
-        keys.push(i);
-        values.push(array[i])
-    }
-
-    return {'keys': keys, 'values': values};*/
-
-    let json = JSON.stringify(array);
-
-    return json;
-}
-
-
-
-/*
     Send a list of all devices connected by usb
 */
 router.get('/devices', (req, res) => {
@@ -41,13 +19,24 @@ router.get('/devices', (req, res) => {
 
 
 /*
-
+    Sends back an object containing the battery levels of each device
 */
 router.post('/batterylevels', (req, res) => {
     let devices = req.body.deviceList;
     let output = adb.getBatteryLevel(devices);
     res.send(JSON.stringify(output));
 });
+
+
+/*
+
+*/
+router.post('/devicenames', (req, res) => {
+    let devices = req.body.deviceList;
+    let output = adb.getDeviceNames(devices);
+    res.send(JSON.stringify(output));
+});
+
 
 
 /*

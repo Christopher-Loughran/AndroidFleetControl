@@ -100,6 +100,36 @@ function getDevices() {
 
 
 /*
+
+*/
+function getDeviceNames(devices) {
+    var output = {};
+
+    for (var i in devices) {
+
+        var temp = shellCmd(devices[i], ["dumpsys", "bluetooth_manager"]);
+        temp = temp.split("\n");
+
+        var name;
+
+        for (var j in temp) {
+            temp[j] = temp[j].trim();
+            if (temp[j].startsWith("name")) {
+                console.log(temp[j]);
+                name = temp[j].substring(6);
+                console.log(name);
+                break;
+            }
+        }
+
+        output[devices[i]] = name;
+    }
+
+    return output;
+}
+
+
+/*
 	Execute a chain of shell commands on a device.
 	No need to put "adb shell ..." in commands list
 	Each option/parameter must be it's own item in the commands list
@@ -642,6 +672,7 @@ export {
     inputKey,
     getPackages,
     getBatteryLevel,
+    getDeviceNames,
     addWifiNetwork,
     toggleWifi,
     checkWifiEnabled,

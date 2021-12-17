@@ -9,6 +9,7 @@
                 <thead>
                     <tr>
                         <th scope="col"> <input class="form-check-input me-1 " type="checkbox" (click)='toggle(this)' id="selectall" /></th>
+                        <th scope="col">Nom d'appareil</th>
                         <th scope="col">Identificateur</th>
                         <th scope="col">Niveau de batterie</th>
                         <th scope="col">Connexion wifi</th>
@@ -18,7 +19,8 @@
                 <tbody>
                     <tr *ngFor="let device of devices">
                         <td><input class="form-check-input me-1 " name="tablette" value="{{device}}" (click)='deviceSelection(this)' type="checkbox"></td>
-                        <th scope="row">{{device}}</th>
+                        <th>{{this.deviceNames[device]}}</th>
+                        <td>{{device}}</td>
                         <td>{{this.batteryLevels[device]}} %</td>
                         <td>
                             <div *ngIf="this.wifiConnections[device]!=='none' ; then hasWifi else noWifi "></div>
