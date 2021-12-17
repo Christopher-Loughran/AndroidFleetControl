@@ -121,9 +121,17 @@
                         </div>
                         <p style="color:black">Choisissez un package </p>
                         <input type="file" id="install" (change)="handlePackage($event.target)" accept=".apk">
+                        <div style="margin-top: 20px;">
+                            Secondes avant timeout
+                            <input type="number" [(ngModel)]="timeoutSeconds" style="width: 10%; margin-left: 10px;">
+
+                            <p style="font-size: small; color: gray;" data-toggle="tooltip" data-placement="bottom" title={{this.timeoutTooltip}}>
+                                Qu'est-ce que c'est ?
+                            </p>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="installPackage(this.devicesListSelection)">Installer</button>
+                        <button type="button" class="btn btn-primary" (click)="installPackage(this.devicesListSelection, this.timeoutSeconds * 1000)">Installer</button>
                         <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertInstall()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>

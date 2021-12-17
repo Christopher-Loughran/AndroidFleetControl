@@ -84,7 +84,9 @@ router.post('/installpackage', function(req, res) {
     }
 
     let file = req.files.package;
-    let devices = JSON.parse(req.body.deviceList);
+    let extras = JSON.parse(req.body.extras);
+    let devices = extras.deviceList;
+    let timeout = extras.timeout;
 
 
     if (file.mimetype == 'application/vnd.android.package-archive') { //check if package is an .apk
@@ -93,7 +95,7 @@ router.post('/installpackage', function(req, res) {
                 res.status(415).send();
             } else { //file was successfully saved
 
-                let output = adb.installPackage(devices, file.name); //install package
+                let output = adb.installPackage(devices, file.name, timeout); //install package
                 res.send(JSON.stringify(output));
                 fs.rm(file.name, () => {}); //delete file (no callback needed)
             }

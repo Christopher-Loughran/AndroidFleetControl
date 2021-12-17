@@ -26,6 +26,10 @@ export class FoctionnalitesComponent implements OnInit {
   adbcmd: string = "";
 
   packageFormData = new FormData(); //used to transfer an apk to be installed
+  timeoutSeconds: number = 10;
+  timeoutTooltip: string = "Si la version de l'application n'est pas la bonne pour l'appareil, cela peut faire planter le serveur.\nIci vous pouvez définir\
+ un temps après laquel le serveur va présumer que la version n'est pas la bonne et vous redonner la main.\nAttention: ce temps s'applique pour\
+ chaque appareil selectionné, donc il serait bien de tester sur un seul appareil d'abord."
 
   packageSearch: string = ""; //search term for uninstalling packages
   allPackages: string[] = []; //list of all packages that appear on at least one selected device
@@ -206,10 +210,11 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     Sends the apk to the server to be installed
   */
-  installPackage(devices: string[]){
+  installPackage(devices: string[], timeout: number){
 
-    this.packageFormData.delete('deviceList');
-    this.packageFormData.append('deviceList', JSON.stringify(devices)); //formData can't accept array, must be stringified and parsed at other end
+    this.packageFormData.delete('extras');
+    this.packageFormData.append('extras', JSON.stringify({deviceList: devices, timeout: timeout})); //formData can't accept array or numbers, must be stringified and parsed at other end
+
 
     return this.http.post<any>(this.url+'/installpackage', this.packageFormData).subscribe(
       (response) => {
@@ -249,7 +254,6 @@ export class FoctionnalitesComponent implements OnInit {
       },
       (error) => { this.displayError(error)});
   }
-
 
   
   /*

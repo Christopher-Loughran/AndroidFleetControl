@@ -198,13 +198,26 @@ function groupAdbCmd(devices, cmd) {
 	/!\ Installation does not work and FREEZES the server if apk is not the right version for device /!\
 	//find a work-around
 */
-function installPackage(devices, packageName) {
+function installPackage(devices, packageName, timout) {
 
     packageName = echapSpaces(packageName);
 
     console.log("Installing " + packageName + " on the following devices: " + devices);
-    let cmd = "install " + packageName
-    return groupAdbCmd(devices, cmd)
+
+    var output = {};
+
+    for (var i in devices) {
+        if (getDevices().includes(devices[i])) {
+
+            const adbProcess = child_process.spawnSync('adb', ["-s", devices[i], "install", packageName], { timeout: timout });
+            output[devices[i]] = adbProcess.stdout.toString();
+
+        } else {
+            output[devices[i]] = device + " is not connected"
+        }
+    }
+
+    return output;
 }
 
 
