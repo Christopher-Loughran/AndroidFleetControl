@@ -7,44 +7,30 @@
         <br>
         <br>
         <div class="d-grid gap-2 d-md-flex justify-content-center">
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#pushfile">Envoyer un fichier</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#pullfile">Télécharger un fichier</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#deletefile">Supprimer un fichier</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#install">Installer un package</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#uninstall" (click)="this.getAllPackages(this.devicesListSelection)">Désinstaller un
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#pushfile">Envoyer un fichier</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#pullfile">Télécharger un fichier</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#deletefile">Supprimer un fichier</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#install">Installer un package</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#uninstall" (click)="this.getAllPackages(this.devicesListSelection)">Désinstaller un
                 package</button>
 
         </div>
         <br>
         <div class="d-grid gap-2 d-md-flex justify-content-center">
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#ajouterwifi">Ajouter un réseau wi-fi</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;"
-                (click)="enableWifi(this.devicesListSelection)">Activer le réseau
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#ajouterwifi">Ajouter un réseau wi-fi</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" (click)="enableWifi(this.devicesListSelection)">Activer le réseau
                 wi-fi</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;"
-                (click)="disableWifi(this.devicesListSelection)">Désactiver 
+            <button class="btn btn-outline-secondary" style="width: 20%;" (click)="disableWifi(this.devicesListSelection)">Désactiver 
                 le réseau wi-fi</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#adbcommande">Exécuter une commande ADB</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#shellcommande">Exécuter une commande shell</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#adbcommande">Exécuter une commande ADB</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#shellcommande">Exécuter une commande shell</button>
         </div>
         <br>
         <div class="d-grid gap-2 d-md-flex">
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#forgetWifi">Oublier les connexions wi-fi</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#eteindre">Eteindre</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal"
-                data-bs-target="#enregistrer">Enregistrer l'écran</button>
-            <button class="btn btn-outline-secondary" style="width: 20%;"
-                (click)="screenCapture(this.devicesListSelection)">Capturer l'écran</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#forgetWifi">Oublier les connexions wi-fi</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#eteindre">Eteindre</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" data-bs-toggle="modal" data-bs-target="#enregistrer">Enregistrer l'écran</button>
+            <button class="btn btn-outline-secondary" style="width: 20%;" (click)="screenCapture(this.devicesListSelection)">Capturer l'écran</button>
             <button class="btn btn-outline-secondary" style="width: 20%;">Test</button>
         </div>
 
@@ -66,8 +52,7 @@
                         <input type="number" [(ngModel)]="recordTime" min="5" max="60">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                            (click)="recordScreen(this.devicesListSelection, recordTime)">Recorder</button>
+                        <button type="button" class="btn btn-primary" (click)="recordScreen(this.devicesListSelection, recordTime)">Recorder</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
@@ -80,8 +65,8 @@
             <div class="modal-dialog modal-lg" style="width: 200%;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 style="color:black" class="modal-title" id="uninstallLabel">Selectionnez les packages à
-                            désinstaller</h5>
+                        <h5 style="color:black" class="modal-title" id="uninstallLabel">Selectionnez les packages à désinstaller
+                        </h5>
                         <button type="button" class="btn-close" (click)="nonDisplayAlertUnInstall()" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -93,17 +78,14 @@
                         </div>
                         <table class="table table-striped">
                             <thead style="text-align: center;">
-                                <input type="text" id="uninstall" [(ngModel)]="packageSearch" placeholder="com.example.appname"
-                                    (keyup)="updatePackagesToDisplay(this.allPackages, this.packageSearch)"
-                                    style="margin: 3%;" />
+                                <input type="text" id="uninstall" [(ngModel)]="packageSearch" placeholder="com.example.appname" (keyup)="updatePackagesToDisplay(this.allPackages, this.packageSearch)" style="margin: 3%;" />
                             </thead>
                             <tbody>
                                 <div *ngIf="this.packagesToDisplay.length != 0 ; then someItems else noItems"></div>
                                 <ng-template #someItems>
                                     <tr *ngFor="let item of this.packagesToDisplay">
                                         <td>
-                                            <input class="form-check-input me-1" name="package" type=checkbox
-                                                (change)="togglePackageToBeUninstalled(item, $event)" /> {{item}}
+                                            <input class="form-check-input me-1" name="package" type=checkbox (change)="togglePackageToBeUninstalled(item, $event)" /> {{item}}
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -115,8 +97,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                            (click)="uninstallMultiplePackages(this.devicesListSelection, this.packagesToUninstall)">Désinstaller</button>
+                        <button type="button" class="btn btn-primary" (click)="uninstallMultiplePackages(this.devicesListSelection, this.packagesToUninstall)">Désinstaller</button>
                         <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertUnInstall()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
@@ -142,8 +123,7 @@
                         <input type="file" id="install" (change)="handlePackage($event.target)" accept=".apk">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                            (click)="installPackage(this.devicesListSelection)">Installer</button>
+                        <button type="button" class="btn btn-primary" (click)="installPackage(this.devicesListSelection)">Installer</button>
                         <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertInstall()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
@@ -158,8 +138,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 style="color:black" class="modal-title" id="pushfile">Envoyer un fichier</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                                (click)="nonDisplayAlertPushFile()"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="nonDisplayAlertPushFile()"></button>
                         </div>
                         <div class="modal-body">
                             <div class="alert alert-success" role="alert" style="display: none;" id="alertSuccesspush">
@@ -172,10 +151,8 @@
                             <input type="file" id="filePush" (change)="handleFile($event.target)">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary"
-                                (click)="pushFile(this.devicesListSelection)">Envoyer</button>
-                            <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertPushFile()"
-                                data-bs-dismiss="modal">Annuler</button>
+                            <button type="button" class="btn btn-primary" (click)="pushFile(this.devicesListSelection)">Envoyer</button>
+                            <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertPushFile()" data-bs-dismiss="modal">Annuler</button>
                         </div>
                     </div>
                 </form>
@@ -202,8 +179,7 @@
                         <input type="text" [(ngModel)]="fileToDelete" placeholder="/sdcard/example.file" />
                     </div>
                     <div class="modal-footer">
-                        <button type="button" (click)="deleteFile(this.devicesListSelection, this.fileToDelete)"
-                            class="btn btn-primary">Supprimer</button>
+                        <button type="button" (click)="deleteFile(this.devicesListSelection, this.fileToDelete)" class="btn btn-primary">Supprimer</button>
                         <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertDeleteFile()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
@@ -230,8 +206,7 @@
                         <input type="text" id="filePull" [(ngModel)]="fileToPull" placeholder="/sdcard/example.file" />
                     </div>
                     <div class="modal-footer">
-                        <button type="button" (click)="pullFile(this.devicesListSelection, this.fileToPull)"
-                            class="btn btn-primary">Télécharger</button>
+                        <button type="button" (click)="pullFile(this.devicesListSelection, this.fileToPull)" class="btn btn-primary">Télécharger</button>
                         <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertPullFile()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
@@ -263,8 +238,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 style="color:black" class="modal-title" id="forgetWifiLabel">Supprimer tous les
-                            connexions wifi
+                        <h5 style="color:black" class="modal-title" id="forgetWifiLabel">Supprimer tous les connexions wifi
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -272,8 +246,7 @@
                         <p style="color:black">Etes-vous sûr de vouloir supprimer toutes les connexions wifi ? </p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                            (click)="forgetAllWifi(this.devicesListSelection)">Oui</button>
+                        <button type="button" class="btn btn-primary" (click)="forgetAllWifi(this.devicesListSelection)">Oui</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
                     </div>
                 </div>
@@ -281,8 +254,7 @@
         </div>
 
         <!-- Executer un commande shell -->
-        <div class="modal fade" id="shellcommande" tabindex="-1" aria-labelledby="shellcommandeLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="shellcommande" tabindex="-1" aria-labelledby="shellcommandeLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -299,15 +271,14 @@
                             <tbody>
                                 <tr *ngFor="let item of this.output">
                                     <td>
-                                       {{item}}
+                                        {{item}}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                            (click)="shellCommand(this.devicesListSelection, this.shellcmd)">Exécuter</button>
+                        <button type="button" class="btn btn-primary" (click)="shellCommand(this.devicesListSelection, this.shellcmd)">Exécuter</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
@@ -316,8 +287,7 @@
 
 
         <!-- Executer un commande ADB -->
-        <div class="modal fade" id="adbcommande" tabindex="-1" aria-labelledby="adbcommandeLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="adbcommande" tabindex="-1" aria-labelledby="adbcommandeLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -326,11 +296,10 @@
                     </div>
                     <div class="modal-body">
                         <p style="color:black">Entrer une commande : </p>
-                        <input type="text" [(ngModel)]="adbcmd" placeholder="ls" />
+                        <input type="text" [(ngModel)]="adbcmd" />
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                            (click)="adbCommand(this.devicesListSelection, this.adbcmd)">Exécuter</button>
+                        <button type="button" class="btn btn-primary" (click)="adbCommand(this.devicesListSelection, this.adbcmd)">Exécuter</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
@@ -339,8 +308,7 @@
 
 
         <!-- Ajouter un réseau wifi -->
-        <div class="modal fade" id="ajouterwifi" tabindex="-1" aria-labelledby="ajouterwifiLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="ajouterwifi" tabindex="-1" aria-labelledby="ajouterwifiLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -350,32 +318,28 @@
                     </div>
                     <div class="modal-body">
                         <div class="alert alert-success" role="alert" style="display: none;" id="alertSuccessajoutwifi">
-                            Le  Wi-Fi ajouté avec succès !
+                            Le Wi-Fi ajouté avec succès !
                         </div>
                         <div class="alert alert-danger" role="alert" style="display: none;" id="alertFailedajoutwifi">
                             Attention le Wi-Fi n'a pas été ajouté !
                         </div>
                         <div class="form-group">
                             <label for="ssid">ssid</label>
-                            <input type="text" [(ngModel)]="wifissid" placeholder="eduroam" class="form-control"
-                                id="ssid" aria-describedby="emailHelp">
+                            <input type="text" [(ngModel)]="wifissid" placeholder="eduroam" class="form-control" id="ssid" aria-describedby="emailHelp">
                         </div>
                         <div class="form-group">
                             <label for="mdp">Mot de passe</label>
-                            <input type="password" class="form-control" id="mdp" [(ngModel)]="wifipassword"
-                                placeholder="***********">
+                            <input type="password" class="form-control" id="mdp" [(ngModel)]="wifipassword" placeholder="***********">
                         </div>
                         <br>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="passwordType"
-                                [(ngModel)]="wifiPasswordType" value="WPA" [checked]="true">
+                            <input class="form-check-input" type="radio" name="passwordType" [(ngModel)]="wifiPasswordType" value="WPA" [checked]="true">
                             <label class="form-check-label" for="wpa">
                                 WPA
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="passwordType"
-                                [(ngModel)]="wifiPasswordType" value="WEP">
+                            <input class="form-check-input" type="radio" name="passwordType" [(ngModel)]="wifiPasswordType" value="WEP">
                             <label class="form-check-label" for="wps">
                                 WEP
                             </label>
@@ -388,8 +352,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary"
-                            (click)="addWifi(this.devicesListSelection, this.wifissid, this.wifipassword, this.wifiPasswordType)" data-bs-dismiss="modal">Ajouter</button>
+                        <button type="button" class="btn btn-primary" (click)="addWifi(this.devicesListSelection, this.wifissid, this.wifipassword, this.wifiPasswordType)" data-bs-dismiss="modal">Ajouter</button>
                         <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertAjoutwifi()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
