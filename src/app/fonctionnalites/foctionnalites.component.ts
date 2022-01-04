@@ -271,9 +271,7 @@ export class FoctionnalitesComponent implements OnInit {
         
         for (var device in response){
           for (var packageName in response[device]){
-
             //console.log(response[device][packageName]);
-
             if(!this.allPackages.includes(response[device][packageName])){
               this.allPackages.push(response[device][packageName]);
               this.allPackages = [...this.allPackages];
