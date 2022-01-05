@@ -39,21 +39,27 @@
 
 
         <!--Les modals des boutons-->
-
+        <!-- Nettoyer-->
         <div class="modal fade" id="nettoyer" tabindex="-1" aria-labelledby="nettoyerLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 style="color:black" class="modal-title" id="nettoyerLabel">Nettoyer les appareils</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" (click)="nonDisplayAlertClean()" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body col text-center">
+                        <div class="alert alert-success" role="alert" style="display: none;" id="alertSuccessclean">
+                             les applications non système des appareils sont supprimées avec succès!
+                        </div>
+                        <div class="alert alert-danger" role="alert" style="display: none;" id="alertFailedclean">
+                            Attention une erreur est survenue lors de la suppression !
+                        </div>
                         Cliquer sur OK si vous voulez supprimer toutes les applications non système des appareils.
                         <br>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" (click)="cleanDevices(this.devicesListSelection)">OK</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertClean()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>
             </div>
@@ -265,25 +271,6 @@
             </div>
         </div>
 
-        <!-- Oublier connexions wi-fi -->
-        <div class="modal fade" id="forgetWifi" tabindex="-1" aria-labelledby="forgetWifiLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 style="color:black" class="modal-title" id="forgetWifiLabel">Supprimer tous les connexions wifi
-                        </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p style="color:black">Etes-vous sûr de vouloir supprimer toutes les connexions wifi ? </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="forgetAllWifi(this.devicesListSelection)">Oui</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Executer un commande shell -->
         <div class="modal fade" id="shellcommande" tabindex="-1" aria-labelledby="shellcommandeLabel" aria-hidden="true">
@@ -297,17 +284,6 @@
                         <p style="color:black">Entrer une commande : </p>
                         <input type="text" [(ngModel)]="shellcmd" placeholder="ls" />
                         <br>
-                        <br>
-                        <table class="table table-striped">
-
-                            <tbody>
-                                <tr *ngFor="let item of this.output">
-                                    <td>
-                                        {{item}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" (click)="shellCommand(this.devicesListSelection, this.shellcmd)">Exécuter</button>

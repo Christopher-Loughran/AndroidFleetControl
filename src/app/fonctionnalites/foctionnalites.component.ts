@@ -115,10 +115,16 @@ export class FoctionnalitesComponent implements OnInit {
       ssid.value="";
       var mdp = document.getElementById("mdp") as HTMLInputElement; 
       mdp.value="";
-
   }
 
-  
+
+    /*
+    Alert nettoyer
+  */
+    nonDisplayAlertClean(){
+      document.getElementById('alertSuccessclean').style.display="none";
+      document.getElementById('alertFailedclean').style.display="none";
+  }
   /*
     Callback used to display any errors when a request doesn't work
   */
@@ -530,17 +536,20 @@ recordScreen(devices: string[], seconds: number){
 
   
   /*
-
+    Nettoyer
   */
   cleanDevices(devices: string[]){
-
     this.http.post<any>(this.url+'/clean', {deviceList: devices}).subscribe(
       (response) => {
-
         console.log(response);
-
+        document.getElementById('alertSuccessclean').style.display="block";
+        document.getElementById('alertFailedclean').style.display="none";
       },
-      (error) => { this.displayError(error)});
+      (error) => { 
+        this.displayError(error);
+        document.getElementById('alertSuccessclean').style.display="none";
+        document.getElementById('alertFailedclean').style.display="block";
+      });
   }
 
 }
