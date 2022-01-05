@@ -179,6 +179,20 @@ export class FoctionnalitesComponent implements OnInit {
   }
 
 
+  downloadCommandOutput(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+  
+    element.style.display = 'none';
+    document.body.appendChild(element);
+  
+    element.click();
+  
+    document.body.removeChild(element);
+  }
+
+
   /*
     Send an adb shell command to selected devices
   */
@@ -187,6 +201,7 @@ export class FoctionnalitesComponent implements OnInit {
       (response) => {
         console.log(response);
         this.output=JSON.stringify(response).split(',');
+        this.downloadCommandOutput("sortie_commande.txt", this.output);
 
       },
       (error) => { this.displayError(error)});
@@ -200,6 +215,8 @@ export class FoctionnalitesComponent implements OnInit {
     this.http.post<any>(this.url+'/adbcmd', {deviceList: devices, cmd: cmd}).subscribe(
       (response) => {
         console.log(response);
+        this.output=JSON.stringify(response).split(',');
+        this.downloadCommandOutput("sortie_commande.txt", this.output);
 
       },
       (error) => { this.displayError(error)});
@@ -534,7 +551,7 @@ recordScreen(devices: string[], seconds: number){
       (error) => { this.displayError(error)});
   }
 
-  
+
   /*
     Nettoyer
   */
