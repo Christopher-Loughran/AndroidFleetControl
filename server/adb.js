@@ -453,12 +453,12 @@ function getPackages(devices) {
 
         for (var j in packagelist) {
             if (!systemPackages.systemPackages.includes(packagelist[j])) {
-                console.log(packagelist[j] + " wasn't in system packages");
+                //console.log(packagelist[j] + " wasn't in system packages");
                 nonSystemPackages.push(packagelist[j]);
             }
         }
 
-        console.log(nonSystemPackages);
+        //console.log(nonSystemPackages);
 
         output[devices[i]] = nonSystemPackages;
     }

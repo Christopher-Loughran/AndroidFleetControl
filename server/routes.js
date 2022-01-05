@@ -341,3 +341,23 @@ router.post('/getwificonnection', (req, res) => {
     let output = adb.checkWifiNetwork(devices);
     res.send(JSON.stringify(output));
 })
+
+
+
+/*
+
+*/
+router.post('/clean', (req, res) => {
+    let devices = req.body.deviceList;
+
+    var output = {}
+
+    var packages = adb.getPackages(devices);
+
+    for (var i in devices) {
+        console.log(devices[i])
+        output[devices[i]] = adb.uninstallMuliplePackages(devices, packages)
+    }
+
+    res.send(JSON.stringify(output));
+})

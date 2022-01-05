@@ -528,5 +528,20 @@ recordScreen(devices: string[], seconds: number){
       (error) => { this.displayError(error)});
   }
 
+  
+  /*
+
+  */
+  cleanDevices(devices: string[]){
+
+    this.http.post<any>(this.url+'/clean', {deviceList: devices}).subscribe(
+      (response) => {
+
+        console.log(response);
+
+      },
+      (error) => { this.displayError(error)});
+  }
+
 }
   
