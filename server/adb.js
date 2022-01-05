@@ -521,9 +521,9 @@ function checkWifiManagerInstalled(device) {
 	Adds wifi network with just a password, or no password.
 	There exists support to set static proxy.
 	Wifi manager app: https://github.com/steinwurf/adb-join-wifi (BSD license)
-	passwordType: 'WPA'/'WEP'/'none'
+	passwordType: 'WPA'/'WEP'/'EAP'/'none'
 */
-function addWifiNetwork(devices, ssid, passwordType, password) {
+function addWifiNetwork(devices, ssid, passwordType, password, username) {
 
     var ssid = echapSpaces(ssid); //replace <space> with \<space>
     var password = echapSpaces(password); //replace <space> with \<space>
@@ -533,8 +533,11 @@ function addWifiNetwork(devices, ssid, passwordType, password) {
     for (var i in devices) {
         checkWifiManagerInstalled(devices[i]); //make sure wifi manager is installed
         try {
-            if (passwordType != "none") {
+            if (passwordType != "none" & passwordType != "EAP") {
                 output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid, "-e", "password_type", passwordType, "-e", "password", password]);
+            } else if (passwordType == "EAP") {
+                console.log("boo");
+                output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid, "-e", "password_type", "EAP", "-e", "password", password, "-e", "username", username]);
             } else {
                 output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid]);
             }

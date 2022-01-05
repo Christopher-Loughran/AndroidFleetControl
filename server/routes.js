@@ -236,12 +236,15 @@ router.post('/addwifi', (req, res) => {
     let ssid = req.body.ssid;
     let passwordType = req.body.passwordType;
     let password = req.body.password;
+    let username = req.body.username;
 
     if (passwordType == "") {
         passwordType = "none"
     }
 
-    adb.addWifiNetwork(devices, ssid, passwordType, password);
+    console.log(ssid, passwordType, password, username);
+
+    adb.addWifiNetwork(devices, ssid, passwordType, password, username);
 
     let output = adb.checkWifiNetwork(devices);
     res.send(JSON.stringify(output));

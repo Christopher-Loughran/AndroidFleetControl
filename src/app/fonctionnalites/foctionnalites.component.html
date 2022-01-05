@@ -49,7 +49,7 @@
                     </div>
                     <div class="modal-body col text-center">
                         <div class="alert alert-success" role="alert" style="display: none;" id="alertSuccessclean">
-                             les applications non système des appareils sont supprimées avec succès!
+                            les applications non système des appareils sont supprimées avec succès!
                         </div>
                         <div class="alert alert-danger" role="alert" style="display: none;" id="alertFailedclean">
                             Attention une erreur est survenue lors de la suppression !
@@ -335,6 +335,10 @@
                             <label for="ssid">ssid</label>
                             <input type="text" [(ngModel)]="wifissid" placeholder="eduroam" class="form-control" id="ssid" aria-describedby="emailHelp">
                         </div>
+                        <div class="form-group" *ngIf="this.wifiPasswordType == 'EAP'">
+                            <label for="user">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="user" [(ngModel)]="wifiUsername" placeholder="username">
+                        </div>
                         <div class="form-group">
                             <label for="mdp">Mot de passe</label>
                             <input type="password" class="form-control" id="mdp" [(ngModel)]="wifipassword" placeholder="***********">
@@ -353,6 +357,12 @@
                             </label>
                         </div>
                         <div class="form-check">
+                            <input class="form-check-input" type="radio" name="passwordType" [(ngModel)]="wifiPasswordType" value="EAP">
+                            <label class="form-check-label" for="eap">
+                                EAP
+                            </label>
+                        </div>
+                        <div class="form-check">
                             <input class="form-check-input" type="radio" name="wifi" id="none" value="option3">
                             <label class="form-check-label" for="none">
                                 None
@@ -360,7 +370,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" (click)="addWifi(this.devicesListSelection, this.wifissid, this.wifipassword, this.wifiPasswordType)" data-bs-dismiss="modal">Ajouter</button>
+                        <button type="button" class="btn btn-primary" (click)="addWifi(this.devicesListSelection, this.wifissid, this.wifipassword, this.wifiPasswordType, this.wifiUsername)" data-bs-dismiss="modal">Ajouter</button>
                         <button type="button" class="btn btn-secondary" (click)="nonDisplayAlertAjoutwifi()" data-bs-dismiss="modal">Annuler</button>
                     </div>
                 </div>

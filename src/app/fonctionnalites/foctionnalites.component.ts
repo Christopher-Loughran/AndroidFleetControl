@@ -45,6 +45,7 @@ export class FoctionnalitesComponent implements OnInit {
   wifiusername: string = "";
   wifiPasswordType: string = "WPA";
   wifipassword: string = "";
+  wifiUsername: string = "";
 
   recordTime: number = 5;
   
@@ -456,11 +457,11 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     
   */
-  addWifi(devices: string[], ssid: string, password: string, passwordType: string){
+  addWifi(devices: string[], ssid: string, password: string, passwordType: string, username: string){
 
     //var passwordType = "WPA"; //WPA/WEP/none (if none password will not be taken into account)
 
-    this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password}).subscribe(
+    this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password, username: username}).subscribe(
       (response) => {
         console.log(response);
         document.getElementById('alertSuccessajoutwifi').style.display="block";
