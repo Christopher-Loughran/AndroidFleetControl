@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output,EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { Observable, of, Subject } from "rxjs";
@@ -10,7 +10,7 @@ import { Observable, of, Subject } from "rxjs";
 })
 export class FoctionnalitesComponent implements OnInit {
 
-  
+
   title = 'FleetControl';
   url = "http://localhost:4201";
 
@@ -22,8 +22,8 @@ export class FoctionnalitesComponent implements OnInit {
   @Output() refresh = new EventEmitter<string>();
 
 
-  output: string[]=[];
-  shellcmd : string = "";
+  output: string[] = [];
+  shellcmd: string = "";
   adbcmd: string = "";
 
   packageFormData = new FormData(); //used to transfer an apk to be installed
@@ -48,127 +48,135 @@ export class FoctionnalitesComponent implements OnInit {
   wifiUsername: string = "";
 
   recordTime: number = 5;
-  
+
   constructor(private http: HttpClient) {
   }
-  
+
   ngOnInit(): void {
   }
-  
+
   /*
     PushFile (Button annuler)
   */
-  nonDisplayAlertPushFile(){
-      document.getElementById('alertSuccesspush').style.display="none";
-      document.getElementById('alertFailedpush').style.display="none";
-      var inputfile = document.getElementById("filePush") as HTMLInputElement; 
-      inputfile.value="";
+  nonDisplayAlertPushFile() {
+    document.getElementById('alertSuccesspush').style.display = "none";
+    document.getElementById('alertFailedpush').style.display = "none";
+    var inputfile = document.getElementById("filePush") as HTMLInputElement;
+    inputfile.value = "";
   }
 
   /*
     Alert PullFile (Button annuler)
   */
-    nonDisplayAlertPullFile(){
-      document.getElementById('alertSuccesspull').style.display="none";
-      document.getElementById('alertFailedpull').style.display="none";
-      var inputfile = document.getElementById("filePull") as HTMLInputElement; 
-      inputfile.value="";
-  }
-  
- /*
-    Alert DeleteFile (Button annuler)
-  */
-    nonDisplayAlertDeleteFile(){
-      document.getElementById('alertSuccessdelete').style.display="none";
-      document.getElementById('alertFaileddelete').style.display="none";
-      var inputfile = document.getElementById("filedelete") as HTMLInputElement; 
-      inputfile.value="";
+  nonDisplayAlertPullFile() {
+    document.getElementById('alertSuccesspull').style.display = "none";
+    document.getElementById('alertFailedpull').style.display = "none";
+    var inputfile = document.getElementById("filePull") as HTMLInputElement;
+    inputfile.value = "";
   }
 
-   /*
-    Alert Install package (Button annuler)
-  */
-    nonDisplayAlertInstall(){
-      document.getElementById('alertSuccessinstall').style.display="none";
-      document.getElementById('alertFailedinstall').style.display="none";
-      var inputfile = document.getElementById("install") as HTMLInputElement; 
-      inputfile.value="";
+  /*
+     Alert DeleteFile (Button annuler)
+   */
+  nonDisplayAlertDeleteFile() {
+    document.getElementById('alertSuccessdelete').style.display = "none";
+    document.getElementById('alertFaileddelete').style.display = "none";
+    var inputfile = document.getElementById("filedelete") as HTMLInputElement;
+    inputfile.value = "";
+  }
+
+  /*
+   Alert Install package (Button annuler)
+ */
+  nonDisplayAlertInstall() {
+    document.getElementById('alertSuccessinstall').style.display = "none";
+    document.getElementById('alertFailedinstall').style.display = "none";
+    var inputfile = document.getElementById("install") as HTMLInputElement;
+    inputfile.value = "";
   }
 
   /*
     Alert Uninstall package (Button annuler)
   */
-    nonDisplayAlertUnInstall(){
-      document.getElementById('alertSuccessuninstall').style.display="none";
-      document.getElementById('alertFaileduninstall').style.display="none";
-      var inputfile = document.getElementById("uninstall") as HTMLInputElement; 
-      inputfile.value="";
+  nonDisplayAlertUnInstall() {
+    document.getElementById('alertSuccessuninstall').style.display = "none";
+    document.getElementById('alertFaileduninstall').style.display = "none";
+    var inputfile = document.getElementById("uninstall") as HTMLInputElement;
+    inputfile.value = "";
   }
 
 
   /*
     Alert add wifi (Button annuler)
   */
-    nonDisplayAlertAjoutwifi(){
-      document.getElementById('alertSuccessajoutwifi').style.display="none";
-      document.getElementById('alertFailedajoutwifi').style.display="none";
-      var ssid = document.getElementById("ssid") as HTMLInputElement; 
-      ssid.value="";
-      var mdp = document.getElementById("mdp") as HTMLInputElement; 
-      mdp.value="";
+  nonDisplayAlertAjoutwifi() {
+    document.getElementById('alertSuccessajoutwifi').style.display = "none";
+    document.getElementById('alertFailedajoutwifi').style.display = "none";
+    var ssid = document.getElementById("ssid") as HTMLInputElement;
+    ssid.value = "";
+    var mdp = document.getElementById("mdp") as HTMLInputElement;
+    mdp.value = "";
   }
 
 
-    /*
-    Alert nettoyer
+  /*
+  Alert nettoyer
+*/
+  nonDisplayAlertClean() {
+    document.getElementById('alertSuccessclean').style.display = "none";
+    document.getElementById('alertFailedclean').style.display = "none";
+  }
+
+  /*
   */
-    nonDisplayAlertClean(){
-      document.getElementById('alertSuccessclean').style.display="none";
-      document.getElementById('alertFailedclean').style.display="none";
+  nonDisplayAlertCommand() {
+    document.getElementById('alertFailedcommand').style.display = "none";
+    document.getElementById('alertFailedadbcommand').style.display = "none";
+
   }
   /*
     Callback used to display any errors when a request doesn't work
   */
   displayError(error: Error) {
-    console.error(error.message); 
+    console.error(error.message);
   }
 
 
   /*
     Convert {a: 10, b: 20, c: 30} to [a: 10, b: 20, c: 30]
   */
-  objectToArray(object: Object){
+  objectToArray(object: Object) {
 
     var array = [];
 
-    for(var i in object){
+    for (var i in object) {
       array[i] = object[i];
     }
     return array;
   }
 
-  
+
   /*
     Converts a 64bit data string into a blob used to download files
   */
-  base64ToBlob(b64Data: string, contentType='', sliceSize=512) {
+  base64ToBlob(b64Data: string, contentType = '', sliceSize = 512) {
     b64Data = b64Data.replace(/\s/g, ''); //IE compatibility...
     let byteCharacters = atob(b64Data);
     let byteArrays = [];
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        let slice = byteCharacters.slice(offset, offset + sliceSize);
+      let slice = byteCharacters.slice(offset, offset + sliceSize);
 
-        let byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-        let byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
+      let byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      let byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
     }
-    return new Blob(byteArrays, {type: contentType});
+    return new Blob(byteArrays, { type: contentType });
   }
-  
-  
+
+
   /*
     Download a file from a filename + data
   */
@@ -184,12 +192,12 @@ export class FoctionnalitesComponent implements OnInit {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     element.setAttribute('download', filename);
-  
+
     element.style.display = 'none';
     document.body.appendChild(element);
-  
+
     element.click();
-  
+
     document.body.removeChild(element);
   }
 
@@ -197,33 +205,42 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     Send an adb shell command to selected devices
   */
-  shellCommand(devices: string[], cmd: string){
-    this.http.post<any>(this.url+'/shellcmd', {deviceList: devices, cmd: cmd}).subscribe(
+  shellCommand(devices: string[], cmd: string) {
+    this.http.post<any>(this.url + '/shellcmd', { deviceList: devices, cmd: cmd }).subscribe(
       (response) => {
         console.log(response);
-        this.output=JSON.stringify(response).split(',');
-        this.downloadCommandOutput("sortie_commande.txt", this.output);
-
+        if (response) {
+          document.getElementById('alertFailedcommand').style.display = "block";
+        }
+        else {
+          this.output = JSON.stringify(response).split(',');
+          this.downloadCommandOutput("sortie_commande.txt", this.output);
+        }
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
 
 
   /*
     Send an adb command to selected devices
   */
-  adbCommand(devices: string[], cmd: string){
-    this.http.post<any>(this.url+'/adbcmd', {deviceList: devices, cmd: cmd}).subscribe(
+  adbCommand(devices: string[], cmd: string) {
+    this.http.post<any>(this.url + '/adbcmd', { deviceList: devices, cmd: cmd }).subscribe(
       (response) => {
         console.log(response);
-        this.output=JSON.stringify(response).split(',');
-        this.downloadCommandOutput("sortie_commande.txt", this.output);
+        if (response) {
+          document.getElementById('alertFailedadbcommand').style.display = "block";
+        }
+        else {
+          this.output = JSON.stringify(response).split(',');
+          this.downloadCommandOutput("sortie_commande.txt", this.output);
+        }
 
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
-  
-  
+
+
   /*
     Adds the apk (to be installed) to the package form data to be sent later
   */
@@ -235,24 +252,38 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     Sends the apk to the server to be installed
   */
-  installPackage(devices: string[], timeout: number){
+  installPackage(devices: string[], timeout: number) {
 
     this.packageFormData.delete('extras');
-    this.packageFormData.append('extras', JSON.stringify({deviceList: devices, timeout: timeout})); //formData can't accept array or numbers, must be stringified and parsed at other end
+    this.packageFormData.append('extras', JSON.stringify({ deviceList: devices, timeout: timeout })); //formData can't accept array or numbers, must be stringified and parsed at other end
 
 
-    return this.http.post<any>(this.url+'/installpackage', this.packageFormData).subscribe(
+    return this.http.post<any>(this.url + '/installpackage', this.packageFormData).subscribe(
       (response) => {
         console.log(response);
-        document.getElementById('alertSuccessinstall').style.display="block";
-        document.getElementById('alertFailedinstall').style.display="none";
-        var inputfile = document.getElementById("install") as HTMLInputElement; 
-        inputfile.value="";
+        const res = JSON.stringify(response);
+        if (response) {
+          document.getElementById('alertSuccessinstall').style.display = "none";
+          document.getElementById('alertFailedinstall').style.display = "block";
+        }
+        else {
+          if (!res.includes("Success")) {
+            document.getElementById('alertSuccessinstall').style.display = "none";
+            document.getElementById('alertFailedinstall').style.display = "block";
+          }
+          else {
+            document.getElementById('alertSuccessinstall').style.display = "block";
+            document.getElementById('alertFailedinstall').style.display = "none";
+            var inputfile = document.getElementById("install") as HTMLInputElement;
+            inputfile.value = "";
+          }
+        }
+
       },
-      (error) => { 
+      (error) => {
         this.displayError(error);
-        document.getElementById('alertSuccessinstall').style.display="none";
-        document.getElementById('alertFailedinstall').style.display="block";
+        document.getElementById('alertSuccessinstall').style.display = "none";
+        document.getElementById('alertFailedinstall').style.display = "block";
       });
   }
 
@@ -260,43 +291,43 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     Check if a package (com.example.appname) is installed on selected devices
   */
-  checkPackageInstalled(devices: string[], packageName: string){
-    this.http.post<any>(this.url+'/checkpackageinstalled', {deviceList: devices, packageName: packageName}).subscribe(
+  checkPackageInstalled(devices: string[], packageName: string) {
+    this.http.post<any>(this.url + '/checkpackageinstalled', { deviceList: devices, packageName: packageName }).subscribe(
       (response) => {
         console.log(response);
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
-  
+
 
   /*
     Get all packages that are installed on each device
   */
-  getInstalledPackages(devices: string[]){
-    this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
+  getInstalledPackages(devices: string[]) {
+    this.http.post<any[]>(this.url + '/installedpackages', { deviceList: devices }).subscribe(
       (response) => {
         console.log(response);
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
 
-  
+
   /*
     Updates allPackages: a list of all the packages installed on at least one selected device
   */
-  getAllPackages(devices: string[]){
+  getAllPackages(devices: string[]) {
 
-    this.http.post<any[]>(this.url+'/installedpackages', {deviceList: devices}).subscribe(
+    this.http.post<any[]>(this.url + '/installedpackages', { deviceList: devices }).subscribe(
       (response) => {
         console.log(response);
 
         this.allPackages = [];
         this.packagesToDisplay = [];
-        
-        for (var device in response){
-          for (var packageName in response[device]){
+
+        for (var device in response) {
+          for (var packageName in response[device]) {
             //console.log(response[device][packageName]);
-            if(!this.allPackages.includes(response[device][packageName])){
+            if (!this.allPackages.includes(response[device][packageName])) {
               this.allPackages.push(response[device][packageName]);
               this.allPackages = [...this.allPackages];
               this.updatePackagesToDisplay(this.allPackages, this.packageSearch)
@@ -304,19 +335,19 @@ export class FoctionnalitesComponent implements OnInit {
           }
         }
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
 
 
   /*
     Update packagesToDisplay: the list that is displayed in the uninstall modal
   */
-  updatePackagesToDisplay(allPackages: string[], searchTerm: string){
+  updatePackagesToDisplay(allPackages: string[], searchTerm: string) {
 
     this.packagesToDisplay = [];
 
-    for(var i in allPackages){
-      if(allPackages[i].includes(searchTerm)){
+    for (var i in allPackages) {
+      if (allPackages[i].includes(searchTerm)) {
         this.packagesToDisplay.push(allPackages[i]);
         this.packagesToDisplay = [...this.packagesToDisplay];
       }
@@ -327,14 +358,14 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     Adds or removes a package to be uninstalled
   */
-  togglePackageToBeUninstalled(packageName: string, event){
+  togglePackageToBeUninstalled(packageName: string, event) {
 
     var toggle = event.target.checked
 
-    if(toggle){
+    if (toggle) {
       this.packagesToUninstall.push(packageName);
     }
-    else{
+    else {
       this.packagesToUninstall.splice(this.packagesToUninstall.indexOf(packageName), 1);
     }
   }
@@ -343,38 +374,43 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     Uninstall one package on all selected devices
   */
-  uninstallPackage(devices: string[], packageName: string){
-    this.http.post<any>(this.url+'/uninstallpackage', {deviceList: devices, packageName: packageName}).subscribe(
+  uninstallPackage(devices: string[], packageName: string) {
+    this.http.post<any>(this.url + '/uninstallpackage', { deviceList: devices, packageName: packageName }).subscribe(
       (response) => {
         console.log(response);
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
 
 
   /*
     Uninstall multiple packages on all selected devices
   */
-  uninstallMultiplePackages(devices: string[], packageList: string[]){
-    this.http.post<any>(this.url+'/uninstallmuliplepackages', {deviceList: devices, packageList: packageList}).subscribe(
+  uninstallMultiplePackages(devices: string[], packageList: string[]) {
+    this.http.post<any>(this.url + '/uninstallmuliplepackages', { deviceList: devices, packageList: packageList }).subscribe(
       (response) => {
         console.log(response);
-        document.getElementById('alertSuccessuninstall').style.display="block";
-        document.getElementById('alertFaileduninstall').style.display="none";
-        var inputfile = document.getElementById("uninstall") as HTMLInputElement; 
-        inputfile.value="";
-
+        if (response) {
+          document.getElementById('alertSuccessuninstall').style.display = "none";
+          document.getElementById('alertFaileduninstall').style.display = "block";
+        }
+        else {
+          document.getElementById('alertSuccessuninstall').style.display = "block";
+          document.getElementById('alertFaileduninstall').style.display = "none";
+          var inputfile = document.getElementById("uninstall") as HTMLInputElement;
+          inputfile.value = "";
+        }
       },
-      (error) => { 
+      (error) => {
         this.displayError(error);
-        document.getElementById('alertSuccessuninstall').style.display="none";
-        document.getElementById('alertFaileduninstall').style.display="block";
+        document.getElementById('alertSuccessuninstall').style.display = "none";
+        document.getElementById('alertFaileduninstall').style.display = "block";
       });
 
     this.packagesToUninstall = [];
   }
-  
-  
+
+
   /*
     Adds the file (to be pushed) to the file form data to be sent later
   */
@@ -386,97 +422,124 @@ export class FoctionnalitesComponent implements OnInit {
   /*
     Sends the file to the server
   */
-  pushFile(devices: string[]){
+  pushFile(devices: string[]) {
     this.fileFormData.delete('deviceList');
     this.fileFormData.append('deviceList', JSON.stringify(devices)); //formData can't accept array, must be stringified and parsed at other end
 
-    return this.http.post<any>(this.url+'/pushfile', this.fileFormData).subscribe(
+    return this.http.post<any>(this.url + '/pushfile', this.fileFormData).subscribe(
       (response) => {
         console.log(response);
-        document.getElementById('alertSuccesspush').style.display="block";
-        document.getElementById('alertFailedpush').style.display="none";
-        var inputfile = document.getElementById("filePush") as HTMLInputElement; 
-        inputfile.value="";
+        if (response) {
+          document.getElementById('alertSuccesspush').style.display = "none";
+          document.getElementById('alertFailedpush').style.display = "block";
+        }
+        else {
+          document.getElementById('alertSuccesspush').style.display = "block";
+          document.getElementById('alertFailedpush').style.display = "none";
+          var inputfile = document.getElementById("filePush") as HTMLInputElement;
+          inputfile.value = "";
+        }
       },
-      (error) => { this.displayError(error)
-        document.getElementById('alertSuccesspush').style.display="none";
-        document.getElementById('alertFailedpush').style.display="block";      
+      (error) => {
+        this.displayError(error)
+        document.getElementById('alertSuccesspush').style.display = "none";
+        document.getElementById('alertFailedpush').style.display = "block";
       });
   }
-  
-  
+
+
   /*
 
   */
-  deleteFile(devices: string[], filePath: string){
-    this.http.post<any>(this.url+'/deletefile', {deviceList: devices, filePath: filePath}).subscribe(
+  deleteFile(devices: string[], filePath: string) {
+    this.http.post<any>(this.url + '/deletefile', { deviceList: devices, filePath: filePath }).subscribe(
       (response) => {
         console.log(response);
-        document.getElementById('alertSuccessdelete').style.display="block";
-        document.getElementById('alertFaileddelete').style.display="none";
-        var inputfile = document.getElementById("fileDelete") as HTMLInputElement; 
+        if (response) {
+          document.getElementById('alertSuccessdelete').style.display = "none";
+          document.getElementById('alertFaileddelete').style.display = "block";
+        }
+        else {
+          document.getElementById('alertSuccessdelete').style.display = "block";
+          document.getElementById('alertFaileddelete').style.display = "none";
+          var inputfile = document.getElementById("fileDelete") as HTMLInputElement;
+        }
       },
-      (error) => { 
+      (error) => {
         this.displayError(error);
-        document.getElementById('alertSuccessdelete').style.display="none";
-        document.getElementById('alertFaileddelete').style.display="block";
+        document.getElementById('alertSuccessdelete').style.display = "none";
+        document.getElementById('alertFaileddelete').style.display = "block";
       });
   }
-  
-  
+
+
   /*
     Get array with shape [filename1 : 64bit_data1, filename2, 64bit_data2, ...]
     for each file, save file.
     Tested for upto 15Mo so far...
   */
-  pullFile(devices: string[], filePath: string){
-    this.http.post<any>(this.url+'/pullfile', {deviceList: devices, filePath: filePath}).subscribe(
+  pullFile(devices: string[], filePath: string) {
+    this.http.post<any>(this.url + '/pullfile', { deviceList: devices, filePath: filePath }).subscribe(
       (response) => {
         console.log(response);
-        document.getElementById('alertSuccesspull').style.display="block";
-        document.getElementById('alertFailedpull').style.display="none";
-        var inputfile = document.getElementById("filePull") as HTMLInputElement; 
-        inputfile.value="";
-        for(var i in response){
-          if(response[i].success == true){
-            this.downloadFile(response[i].filename, response[i].data);
-          }
-          else{
-            console.log(response[i].error);
+        if (response) {
+          document.getElementById('alertSuccesspull').style.display = "none";
+          document.getElementById('alertFailedpull').style.display = "block";
+        }
+        else {
+          document.getElementById('alertSuccesspull').style.display = "block";
+          document.getElementById('alertFailedpull').style.display = "none";
+          var inputfile = document.getElementById("filePull") as HTMLInputElement;
+          inputfile.value = "";
+          for (var i in response) {
+            if (response[i].success == true) {
+              this.downloadFile(response[i].filename, response[i].data);
+            }
+            else {
+              console.log(response[i].error);
+            }
           }
         }
+
       },
-      (error) => { 
+      (error) => {
         this.displayError(error);
-        document.getElementById('alertSuccesspull').style.display="none";
-        document.getElementById('alertFailedpull').style.display="block";
+        document.getElementById('alertSuccesspull').style.display = "none";
+        document.getElementById('alertFailedpull').style.display = "block";
       });
   }
-  
-  
+
+
   /*
     
   */
-  addWifi(devices: string[], ssid: string, password: string, passwordType: string, username: string){
+  addWifi(devices: string[], ssid: string, password: string, passwordType: string, username: string) {
 
     //var passwordType = "WPA"; //WPA/WEP/none (if none password will not be taken into account)
 
-    this.http.post<any>(this.url+'/addwifi', {deviceList: devices, ssid: ssid, passwordType: passwordType, password: password, username: username}).subscribe(
+    this.http.post<any>(this.url + '/addwifi', { deviceList: devices, ssid: ssid, passwordType: passwordType, password: password, username: username }).subscribe(
       (response) => {
         console.log(response);
-        document.getElementById('alertSuccessajoutwifi').style.display="block";
-        document.getElementById('alertFailedajoutwifi').style.display="none";
-        var ssid = document.getElementById("ssid") as HTMLInputElement; 
-        var mdp = document.getElementById("mdp") as HTMLInputElement; 
-        ssid.value="";
-        mdp.value="";
-
-        this.refresh.emit("");
+        if (response) {
+          document.getElementById('alertSuccessajoutwifi').style.display = "none";
+          document.getElementById('alertFailedajoutwifi').style.display = "block";
+        }
+        else{
+          document.getElementById('alertSuccessajoutwifi').style.display = "block";
+          document.getElementById('alertFailedajoutwifi').style.display = "none";
+          var ssid = document.getElementById("ssid") as HTMLInputElement;
+          var mdp = document.getElementById("mdp") as HTMLInputElement;
+          ssid.value = "";
+          mdp.value = "";
+  
+          this.refresh.emit("");
+        }
+       
       },
-      (error) => { 
+      (error) => {
         this.displayError(error);
-        document.getElementById('alertSuccessajoutwifi').style.display="none";
-        document.getElementById('alertFailedajoutwifi').style.display="block";
+        document.getElementById('alertSuccessajoutwifi').style.display = "none";
+        document.getElementById('alertFailedajoutwifi').style.display = "block";
       });
   }
 
@@ -484,91 +547,114 @@ export class FoctionnalitesComponent implements OnInit {
   /*
 
   */
-  disableWifi(devices: string[]){
-    this.http.post<any>(this.url+'/disablewifi', {deviceList: devices, toggle: false}).subscribe(
+  disableWifi(devices: string[]) {
+    this.http.post<any>(this.url + '/disablewifi', { deviceList: devices, toggle: false }).subscribe(
       (response) => {
         console.log(response);
       },
-      (error) => { this.displayError(error)});
+      (error) => { 
+        this.displayError(error);
+       
+      });
   }
-  
-  
+
+
   /*
 
   */
-  enableWifi(devices: string[]){
-    this.http.post<any>(this.url+'/enablewifi', {deviceList: devices, toggle: true}).subscribe(
+  enableWifi(devices: string[]) {
+    this.http.post<any>(this.url + '/enablewifi', { deviceList: devices, toggle: true }).subscribe(
       (response) => {
         console.log(response);
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
 
 
-    /*
+  /*
 
-  */
-  forgetAllWifi(devices: string[]){
-    this.http.post<any>(this.url+'/forgetallwifi', {deviceList: devices}).subscribe(
+*/
+  forgetAllWifi(devices: string[]) {
+    this.http.post<any>(this.url + '/forgetallwifi', { deviceList: devices }).subscribe(
       (response) => {
         console.log(response);
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
 
   /*
   Record the screen of selected devices for n seconds then download the files
 */
-recordScreen(devices: string[], seconds: number){
-  this.http.post<any>(this.url+'/recordscreen', {deviceList: devices, seconds: seconds}).subscribe(
-    (response) => {
-      console.log(response);
+  recordScreen(devices: string[], seconds: number) {
+    this.http.post<any>(this.url + '/recordscreen', { deviceList: devices, seconds: seconds }).subscribe(
+      (response) => {
+        console.log(response);
+        if(response){
+          console.log("sélectionner un appareil")
+        }
+        else{
+          var files = this.objectToArray(response);
 
-      var files = this.objectToArray(response);
+          for (var i in files) {
+            this.downloadFile(i, files[i]);
+          }
+        }
 
-      for(var i in files){
-        this.downloadFile(i, files[i]);
-      }
-    },
-    (error) => { this.displayError(error)});
+      
+      },
+      (error) => { this.displayError(error) });
   }
 
 
   /*
     Get a screen capture of selected devices and download then download the files
   */
-  screenCapture(devices: string[]){
+  screenCapture(devices: string[]) {
 
-    this.http.post<any>(this.url+'/screencapture', {deviceList: devices}).subscribe(
+    this.http.post<any>(this.url + '/screencapture', { deviceList: devices }).subscribe(
       (response) => {
         console.log(response);
+        if(response){
+          console.log("sélectionner un appareil")
 
-        var files = this.objectToArray(response);
-
-        for(var i in files){
-          this.downloadFile(i, files[i]);
         }
+        else{
+          var files = this.objectToArray(response);
+
+          for (var i in files) {
+            this.downloadFile(i, files[i]);
+          }
+        }
+
+        
       },
-      (error) => { this.displayError(error)});
+      (error) => { this.displayError(error) });
   }
 
 
   /*
     Nettoyer
   */
-  cleanDevices(devices: string[]){
-    this.http.post<any>(this.url+'/clean', {deviceList: devices}).subscribe(
+  cleanDevices(devices: string[]) {
+    this.http.post<any>(this.url + '/clean', { deviceList: devices }).subscribe(
       (response) => {
         console.log(response);
-        document.getElementById('alertSuccessclean').style.display="block";
-        document.getElementById('alertFailedclean').style.display="none";
+        if(response){
+          document.getElementById('alertSuccessclean').style.display = "none";
+          document.getElementById('alertFailedclean').style.display = "block";
+        }
+        else{
+          document.getElementById('alertSuccessclean').style.display = "block";
+          document.getElementById('alertFailedclean').style.display = "none";
+        }
+
       },
-      (error) => { 
+      (error) => {
         this.displayError(error);
-        document.getElementById('alertSuccessclean').style.display="none";
-        document.getElementById('alertFailedclean').style.display="block";
+        document.getElementById('alertSuccessclean').style.display = "none";
+        document.getElementById('alertFailedclean').style.display = "block";
       });
   }
 
 }
-  
+
