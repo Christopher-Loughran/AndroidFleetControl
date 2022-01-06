@@ -536,7 +536,6 @@ function addWifiNetwork(devices, ssid, passwordType, password, username) {
             if (passwordType != "none" & passwordType != "EAP") {
                 output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid, "-e", "password_type", passwordType, "-e", "password", password]);
             } else if (passwordType == "EAP") {
-                console.log("boo");
                 output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid, "-e", "password_type", "EAP", "-e", "password", password, "-e", "username", username]);
             } else {
                 output[devices[i]] = shellCmd(devices[i], ["am", "start", "-n", "com.steinwurf.adbjoinwifi/.MainActivity", "-e", "ssid", ssid]);
